@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/sqzass/patches/compare/v1.0.0...v1.1.0) (2026-10-11)
+
+### ✨ New Features
+
+* dummy push ([ecd9d67](https://github.com/sqzass/patches/commit/ecd9d67af8db05d32863b29a1535d77aabedc158))
+
 ## 1.0.0 (2026-10-11)
 
 ### ✨ New Features
