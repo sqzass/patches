@@ -41,8 +41,14 @@ object TrackerPrefixes {
      * Whether a class type matches any tracked prefix. Accepts both dotted class names
      * and type descriptors such as `Lcom/appsflyer/AFInAppEventParameterName;`.
      */
-    fun matches(classType: String): Boolean {
+    fun matches(classType: String): Boolean = matchesAny(classType, ALL)
+
+    /**
+     * Whether a class type matches any of [prefixes], normalizing dotted class names
+     * and type descriptors alike.
+     */
+    fun matchesAny(classType: String, prefixes: Set<String>): Boolean {
         val dotted = classType.removePrefix("L").removeSuffix(";").replace('/', '.')
-        return ALL.any { prefix -> dotted.startsWith(prefix) }
+        return prefixes.any { prefix -> dotted.startsWith(prefix) }
     }
 }
