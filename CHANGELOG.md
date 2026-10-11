@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/sqzass/patches/compare/v1.2.0...v1.3.0) (2026-10-11)
+
+### ✨ New Features
+
+* add privacy patches and shared utility modules for app hardening ([4dea216](https://github.com/sqzass/patches/commit/4dea21651af618ae6860ed3d338e75466a33f67f))
+
 ## [1.2.0](https://github.com/sqzass/patches/compare/v1.1.0...v1.2.0) (2026-10-11)
 
 ### ✨ New Features
