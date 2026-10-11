@@ -1,5 +1,9 @@
 # 🧩 sqz patches
 
+[![Release](https://img.shields.io/github/v/release/sqzass/patches?logo=github&color=blue)](https://github.com/sqzass/patches/releases)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Add to Morphe](https://img.shields.io/badge/Morphe-Add_Source-7C4DFF?logo=android&logoColor=white)](https://morphe.software/add-source?github=sqzass/patches)
+
 Universal and customized patches for Android apps, compatible with [Morphe](https://morphe.software).
 
 ## ❓ About
