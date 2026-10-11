@@ -17,14 +17,17 @@ Click here to add these patches to Morphe: https://morphe.software/add-source?gi
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0](https://github.com/sqzass/patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+> **[v1.2.0](https://github.com/sqzass/patches/releases/tag/v1.2.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
 <details open>
-<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;4 patches</summary>
 <br>
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
+| [Allow screenshots and screen recording](#allow-screenshots-and-screen-recording) | Removes recent-apps preview hiding and screen capture restrictions across application activities. | • Enable Recent App Previews<br>• Remove Capture Restrictions |
+| [Enable debugging and inspection](#enable-debugging-and-inspection) | Enables application debugging flags, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest. | • Enable Debugging<br>• Allow Cleartext Traffic<br>• Remove Test-Only Flag |
 | [Strip sensitive permissions](#strip-sensitive-permissions) | Strips sensitive Android permissions (such as camera and microphone access) from the application manifest to enhance privacy. | • Strip Camera<br>• Strip Microphone<br>• Strip Location<br>• Strip Sensors |
+| [Strip trackers and telemetry](#strip-trackers-and-telemetry) | Strips known tracking, analytics, and advertising SDK components (such as Google Analytics, Firebase, AppsFlyer, Adjust, Facebook, and Crashlytics) from the application manifest. | • Strip Google & Firebase Analytics<br>• Strip Facebook Analytics<br>• Strip Attribution Trackers<br>• Strip Crash Reporting Telemetry<br>• Strip Advertising ID Permissions |
 
 </details>
 

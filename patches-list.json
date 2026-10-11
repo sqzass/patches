@@ -1,7 +1,70 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "patches": [
+    {
+      "name": "Allow screenshots and screen recording",
+      "description": "Removes recent-apps preview hiding and screen capture restrictions across application activities.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "enableRecentPreviews",
+          "title": "Enable Recent App Previews",
+          "description": "Removes android:excludeFromRecents to allow viewing the app thumbnail in the Android app switcher.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "removeCaptureRestrictions",
+          "title": "Remove Capture Restrictions",
+          "description": "Clears screenshot and screen recording blocking flags from activities.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Enable debugging and inspection",
+      "description": "Enables application debugging flags, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "enableDebugging",
+          "title": "Enable Debugging",
+          "description": "Sets android:debuggable to true on the application tag to allow attaching debuggers and profiling tools.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "allowCleartextTraffic",
+          "title": "Allow Cleartext Traffic",
+          "description": "Sets android:usesCleartextTraffic to true to allow inspecting HTTP/cleartext network communication.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "removeTestOnly",
+          "title": "Remove Test-Only Flag",
+          "description": "Removes android:testOnly if present so the application can be installed normally on production devices.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
     {
       "name": "Strip sensitive permissions",
       "description": "Strips sensitive Android permissions (such as camera and microphone access) from the application manifest to enhance privacy.",
@@ -43,6 +106,60 @@
           "required": false,
           "type": "kotlin.Boolean",
           "default": false,
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Strip trackers and telemetry",
+      "description": "Strips known tracking, analytics, and advertising SDK components (such as Google Analytics, Firebase, AppsFlyer, Adjust, Facebook, and Crashlytics) from the application manifest.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "stripGoogleAnalytics",
+          "title": "Strip Google & Firebase Analytics",
+          "description": "Remove Google Analytics, Firebase Analytics, and AppMeasurement components.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "stripFacebookAnalytics",
+          "title": "Strip Facebook Analytics",
+          "description": "Remove Facebook App Events and analytics provider components.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "stripAttributionTrackers",
+          "title": "Strip Attribution Trackers",
+          "description": "Remove third-party attribution and tracking SDKs (AppsFlyer, Adjust, Branch, Kochava, Mixpanel, Flurry).",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "stripCrashReporting",
+          "title": "Strip Crash Reporting Telemetry",
+          "description": "Remove Crashlytics and Microsoft App Center telemetry services.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "stripAdvertisingId",
+          "title": "Strip Advertising ID Permissions",
+          "description": "Remove AD_ID and AdServices permissions to prevent advertising tracking.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
           "values": null
         }
       ]
