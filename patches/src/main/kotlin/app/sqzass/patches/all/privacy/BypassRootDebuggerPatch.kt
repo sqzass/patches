@@ -13,6 +13,8 @@ val bypassRootDebuggerPatch = resourcePatch(
     description = "Enables application debugging flags, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest.",
     default = false
 ) {
+    category("Debugging")
+
     val enableDebuggingOption = booleanOption(
         key = "enableDebugging",
         default = true,

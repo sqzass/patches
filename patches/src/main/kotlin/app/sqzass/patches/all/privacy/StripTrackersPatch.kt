@@ -2,38 +2,13 @@ package app.sqzass.patches.all.privacy
 
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.resourcePatch
+import app.sqzass.patches.shared.PERMISSION_TAGS
+import app.sqzass.patches.shared.TrackerPrefixes
+import app.sqzass.patches.shared.removeElements
 import org.w3c.dom.Element
 import java.util.logging.Logger
 
 private val logger = Logger.getLogger("StripTrackersPatch")
-
-private val GOOGLE_TRACKER_PREFIXES = setOf(
-    "com.google.android.gms.measurement.",
-    "com.google.firebase.analytics.",
-    "com.google.android.gms.analytics.",
-    "com.google.android.gms.ads.",
-)
-
-private val FACEBOOK_TRACKER_PREFIXES = setOf(
-    "com.facebook.appevents.",
-    "com.facebook.internal.FacebookInitProvider",
-    "com.facebook.marketing.",
-)
-
-private val ATTRIBUTION_TRACKER_PREFIXES = setOf(
-    "com.appsflyer.",
-    "com.adjust.sdk.",
-    "io.branch.",
-    "com.kochava.",
-    "com.mixpanel.",
-    "com.flurry.",
-)
-
-private val CRASH_TRACKER_PREFIXES = setOf(
-    "com.google.firebase.crashlytics.",
-    "com.crashlytics.",
-    "com.microsoft.appcenter.",
-)
 
 private val AD_PERMISSIONS = setOf(
     "com.google.android.gms.permission.AD_ID",
@@ -47,6 +22,8 @@ val stripTrackersPatch = resourcePatch(
     description = "Strips known tracking, analytics, and advertising SDK components (such as Google Analytics, Firebase, AppsFlyer, Adjust, Facebook, and Crashlytics) from the application manifest.",
     default = false
 ) {
+    category("Privacy")
+
     val stripGoogleOption = booleanOption(
         key = "stripGoogleAnalytics",
         default = true,
@@ -86,63 +63,34 @@ val stripTrackersPatch = resourcePatch(
         val activePrefixes = mutableSetOf<String>()
 
         if (stripGoogleOption.value == true) {
-            activePrefixes.addAll(GOOGLE_TRACKER_PREFIXES)
+            activePrefixes.addAll(TrackerPrefixes.GOOGLE)
         }
         if (stripFacebookOption.value == true) {
-            activePrefixes.addAll(FACEBOOK_TRACKER_PREFIXES)
+            activePrefixes.addAll(TrackerPrefixes.FACEBOOK)
         }
         if (stripAttributionOption.value == true) {
-            activePrefixes.addAll(ATTRIBUTION_TRACKER_PREFIXES)
+            activePrefixes.addAll(TrackerPrefixes.ATTRIBUTION)
         }
         if (stripCrashOption.value == true) {
-            activePrefixes.addAll(CRASH_TRACKER_PREFIXES)
+            activePrefixes.addAll(TrackerPrefixes.CRASH)
         }
 
         document("AndroidManifest.xml").use { document ->
-            val componentTags = listOf("service", "receiver", "provider", "activity")
-            val removedComponents = mutableListOf<String>()
+            var removedComponents = emptyList<String>()
 
             if (activePrefixes.isNotEmpty()) {
-                for (tag in componentTags) {
-                    val nodes = document.getElementsByTagName(tag)
-                    val elementsToRemove = mutableListOf<Element>()
-
-                    for (i in 0 until nodes.length) {
-                        val element = nodes.item(i) as? Element ?: continue
-                        val name = element.getAttribute("android:name")
-                        if (activePrefixes.any { prefix -> name.startsWith(prefix) }) {
-                            elementsToRemove.add(element)
-                            removedComponents.add(name)
-                        }
-                    }
-
-                    for (element in elementsToRemove) {
-                        element.parentNode?.removeChild(element)
-                    }
+                removedComponents = removeElements(
+                    document,
+                    listOf("service", "receiver", "provider", "activity"),
+                ) { element ->
+                    activePrefixes.any { prefix -> element.getAttribute("android:name").startsWith(prefix) }
                 }
             }
 
             // Strip ad-related permissions
             if (stripAdIdOption.value == true) {
-                val permTags = listOf("uses-permission", "uses-permission-sdk-23")
-                val removedPerms = mutableListOf<String>()
-
-                for (tag in permTags) {
-                    val nodes = document.getElementsByTagName(tag)
-                    val elementsToRemove = mutableListOf<Element>()
-
-                    for (i in 0 until nodes.length) {
-                        val element = nodes.item(i) as? Element ?: continue
-                        val name = element.getAttribute("android:name")
-                        if (AD_PERMISSIONS.contains(name)) {
-                            elementsToRemove.add(element)
-                            removedPerms.add(name)
-                        }
-                    }
-
-                    for (element in elementsToRemove) {
-                        element.parentNode?.removeChild(element)
-                    }
+                val removedPerms = removeElements(document, PERMISSION_TAGS) { element ->
+                    AD_PERMISSIONS.contains(element.getAttribute("android:name"))
                 }
                 if (removedPerms.isNotEmpty()) {
                     logger.info("Stripped ad permissions: $removedPerms")

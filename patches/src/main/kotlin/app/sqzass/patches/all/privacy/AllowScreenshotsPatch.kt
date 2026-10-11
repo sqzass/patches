@@ -2,7 +2,7 @@ package app.sqzass.patches.all.privacy
 
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.resourcePatch
-import org.w3c.dom.Element
+import app.sqzass.patches.shared.collectElements
 import java.util.logging.Logger
 
 private val logger = Logger.getLogger("AllowScreenshotsPatch")
@@ -13,6 +13,8 @@ val allowScreenshotsPatch = resourcePatch(
     description = "Removes recent-apps preview hiding and screen capture restrictions across application activities.",
     default = false
 ) {
+    category("Interface")
+
     val enableRecentPreviewsOption = booleanOption(
         key = "enableRecentPreviews",
         default = true,
@@ -29,24 +31,19 @@ val allowScreenshotsPatch = resourcePatch(
 
     execute {
         document("AndroidManifest.xml").use { document ->
-            val activityTags = listOf("activity", "activity-alias")
+            val activities = collectElements(document, listOf("activity", "activity-alias")) { true }
 
-            for (tag in activityTags) {
-                val nodes = document.getElementsByTagName(tag)
-                for (i in 0 until nodes.length) {
-                    val activity = nodes.item(i) as? Element ?: continue
-
-                    if (enableRecentPreviewsOption.value == true) {
-                        if (activity.hasAttribute("android:excludeFromRecents")) {
-                            activity.removeAttribute("android:excludeFromRecents")
-                        }
+            for (activity in activities) {
+                if (enableRecentPreviewsOption.value == true) {
+                    if (activity.hasAttribute("android:excludeFromRecents")) {
+                        activity.removeAttribute("android:excludeFromRecents")
                     }
+                }
 
-                    if (removeCaptureRestrictionsOption.value == true) {
-                        // Clear any screen capture callback restrictions
-                        if (activity.hasAttribute("android:screenCaptureCallback")) {
-                            activity.removeAttribute("android:screenCaptureCallback")
-                        }
+                if (removeCaptureRestrictionsOption.value == true) {
+                    // Clear any screen capture callback restrictions
+                    if (activity.hasAttribute("android:screenCaptureCallback")) {
+                        activity.removeAttribute("android:screenCaptureCallback")
                     }
                 }
             }
