@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/sqzass/patches/compare/v1.4.0...v1.5.0) (2026-10-12)
+
+### ✨ New Features
+
+* add privacy patches for analytics and backups ([105b1b1](https://github.com/sqzass/patches/commit/105b1b19af9c72cf52a7633a94a3d185fe1ec025))
+
 ## [1.4.0](https://github.com/sqzass/patches/compare/v1.3.0...v1.4.0) (2026-10-12)
 
 ### ✨ New Features

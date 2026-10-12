@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "patches": [
     {
       "name": "Allow screenshots and screen recording",
@@ -75,6 +75,42 @@
       ]
     },
     {
+      "name": "Disable analytics collection",
+      "description": "Disables Firebase Analytics, Crashlytics, and Performance Monitoring data collection by forcing their manifest meta-data flags to false.",
+      "default": false,
+      "category": "Privacy",
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "disableFirebaseAnalytics",
+          "title": "Disable Firebase Analytics",
+          "description": "Force firebase_analytics_collection_enabled to false in the manifest.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "disableCrashlytics",
+          "title": "Disable Crashlytics",
+          "description": "Force firebase_crashlytics_collection_enabled to false in the manifest.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "disablePerformanceMonitoring",
+          "title": "Disable Performance Monitoring",
+          "description": "Force firebase_performance_collection_enabled to false in the manifest.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
+    {
       "name": "Disable boot start-up",
       "description": "Removes boot intent filters so the app cannot start itself when the device boots.",
       "default": false,
@@ -85,6 +121,33 @@
           "key": "removeBootFilters",
           "title": "Remove Boot Intent Filters",
           "description": "Strip BOOT_COMPLETED, LOCKED_BOOT_COMPLETED, and quickboot intent filters from receivers and services.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Enable app backups",
+      "description": "Allows the app to back up its data by enabling android:allowBackup and removing restrictive backup rules in the application manifest.",
+      "default": false,
+      "category": "General",
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "enableBackups",
+          "title": "Enable Backups",
+          "description": "Sets android:allowBackup to true on the application tag.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "removeBackupRules",
+          "title": "Remove Backup Rules",
+          "description": "Removes android:fullBackupContent and android:dataExtractionRules so the system default rules (back up everything) apply.",
           "required": false,
           "type": "kotlin.Boolean",
           "default": true,
@@ -346,6 +409,24 @@
           "key": "disableTrackerCalls",
           "title": "Disable Tracker SDK Calls",
           "description": "Replace void-returning calls into the stripped tracking SDKs with no-ops so they never run.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Unlock screen orientation",
+      "description": "Removes android:screenOrientation locks from activities so the screen follows the device rotation setting.",
+      "default": false,
+      "category": "Interface",
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "removeOrientationLocks",
+          "title": "Remove Orientation Locks",
+          "description": "Strip android:screenOrientation from every activity so orientation is no longer locked.",
           "required": false,
           "type": "kotlin.Boolean",
           "default": true,
