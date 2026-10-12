@@ -102,7 +102,7 @@ private val MICROPHONE_FEATURES = setOf(
 @Suppress("unused")
 val stripPermissionsPatch = resourcePatch(
     name = "Strip sensitive permissions",
-    description = "Strips sensitive Android permissions (such as camera and microphone access) from the application manifest to enhance privacy.",
+    description = "Strips sensitive Android permissions and package visibility declarations from the application manifest to enhance privacy.",
     default = false
 ) {
     category("Privacy")
@@ -184,6 +184,20 @@ val stripPermissionsPatch = resourcePatch(
         description = "Remove package installer, usage access, and all-files access permissions (REQUEST_INSTALL_PACKAGES, PACKAGE_USAGE_STATS, MANAGE_EXTERNAL_STORAGE).",
     )
 
+    val removeQueriesOption = booleanOption(
+        key = "removeQueries",
+        default = true,
+        title = "Remove Queries Declarations",
+        description = "Remove all <queries> elements used to probe for other installed packages.",
+    )
+
+    val removeQueryAllPackagesOption = booleanOption(
+        key = "removeQueryAllPackages",
+        default = true,
+        title = "Remove QUERY_ALL_PACKAGES Permission",
+        description = "Remove the QUERY_ALL_PACKAGES permission that grants blanket visibility of installed apps.",
+    )
+
     execute {
         val permissionsToStrip = mutableSetOf<String>()
         val featuresToDowngrade = mutableSetOf<String>()
@@ -234,27 +248,41 @@ val stripPermissionsPatch = resourcePatch(
             permissionsToStrip.addAll(SPECIAL_ACCESS_PERMISSIONS)
         }
 
-        if (permissionsToStrip.isEmpty()) {
-            logger.info("No permissions selected to strip.")
-            return@execute
-        }
-
         document("AndroidManifest.xml").use { document ->
-            val removedPermissions = removeElements(document, PERMISSION_TAGS) { element ->
-                permissionsToStrip.contains(element.getAttribute("android:name"))
+            if (permissionsToStrip.isNotEmpty()) {
+                val removedPermissions = removeElements(document, PERMISSION_TAGS) { element ->
+                    permissionsToStrip.contains(element.getAttribute("android:name"))
+                }
+
+                // Adjust hardware features if their corresponding permissions were stripped.
+                val features = collectElements(document, listOf("uses-feature")) { element ->
+                    featuresToDowngrade.contains(element.getAttribute("android:name"))
+                }
+                for (element in features) {
+                    // Mark as not required so app does not refuse to run on devices without the hardware
+                    element.setAttribute("android:required", "false")
+                    logger.info("Set feature ${element.getAttribute("android:name")} android:required to false")
+                }
+
+                logger.info("Successfully stripped permissions: $removedPermissions")
+            } else {
+                logger.info("No permissions selected to strip.")
             }
 
-            // Adjust hardware features if their corresponding permissions were stripped.
-            val features = collectElements(document, listOf("uses-feature")) { element ->
-                featuresToDowngrade.contains(element.getAttribute("android:name"))
-            }
-            for (element in features) {
-                // Mark as not required so app does not refuse to run on devices without the hardware
-                element.setAttribute("android:required", "false")
-                logger.info("Set feature ${element.getAttribute("android:name")} android:required to false")
+            // Package visibility
+            if (removeQueriesOption.value == true) {
+                val removed = removeElements(document, listOf("queries")) { true }
+                logger.info("Removed ${removed.size} <queries> elements.")
             }
 
-            logger.info("Successfully stripped permissions: $removedPermissions")
+            if (removeQueryAllPackagesOption.value == true) {
+                val removed = removeElements(document, PERMISSION_TAGS) { element ->
+                    element.getAttribute("android:name") == "android.permission.QUERY_ALL_PACKAGES"
+                }
+                if (removed.isNotEmpty()) {
+                    logger.info("Removed permissions: $removed")
+                }
+            }
         }
     }
 }
