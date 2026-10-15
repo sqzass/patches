@@ -27,6 +27,18 @@
 - Shared helpers already written (this effort): `shared/ConstTracking.kt` (argumentRegisters, methodReferenceOf,
   constStringLoad, narrowConstLoad, findConstArgInvokes) and `BytecodeUtil.forceInvokeResult(instructions, i) { reg -> smali }`.
 
+## 🛠 Local compile loop (USE THIS — works as of S2)
+Command: `cd <repo> && nohup ./gradlew -p .local-docs/compilecheck compileKotlin > /tmp/compilecheck.log 2>&1 &`
+then poll: `grep -E '^e: |BUILD (SUCCESSFUL|FAILED)' /tmp/compilecheck.log`
+- run_commands tool has a 30s timeout → ALWAYS run gradle detached with nohup, then poll.
+- `.local-docs/compilecheck/` = throwaway Gradle project that compiles `patches/src/main/kotlin`
+  against morphe-patcher built from source via `includeBuild("../morphe-patcher")`
+  (bypasses the GitHub Packages 401), smali/dexlib2 from jitpack, Kotlin 2.4.10,
+  `kotlin { jvmToolchain(21) }` with JDK at `.local-docs/jdk-21.0.12.1+1` (Adoptium tarball, in .local-docs).
+- Catches all type/API errors locally in ~10s (incremental). CI is only needed for the real
+  `:patches:buildAndroid` packaging. CI log download needs admin; annotations API works but is useless
+  (only "exit code 1") → rely on the local loop for errors.
+
 ## 📊 Patch tracker
 Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed → rework · ❓ blocked on user
 

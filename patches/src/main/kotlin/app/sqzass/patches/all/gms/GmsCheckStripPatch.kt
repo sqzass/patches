@@ -143,7 +143,7 @@ val gmsCheckStripPatch = resourcePatch(
         }
 
         document("AndroidManifest.xml").use { document ->
-            val packages = collectElements(document, listOf("queries"))
+            val packages = collectElements(document, listOf("queries")) { true }
                 .flatMap { query -> collectDescendants(query, "package") }
                 .filter { it.getAttribute("android:name") in GMS_VISIBILITY_PACKAGES }
             for (element in packages) {

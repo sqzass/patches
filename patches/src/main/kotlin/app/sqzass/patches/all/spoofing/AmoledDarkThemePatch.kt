@@ -4,6 +4,7 @@ import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
+import app.sqzass.patches.shared.collectElements
 import app.sqzass.patches.shared.constStringLoad
 import app.sqzass.patches.shared.findConstArgInvokes
 import app.sqzass.patches.shared.forceInvokeResult
