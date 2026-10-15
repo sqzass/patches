@@ -17,7 +17,7 @@ Click here to add these patches to Morphe: https://morphe.software/add-source?gi
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.5.0](https://github.com/sqzass/patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
+> **[v1.6.0](https://github.com/sqzass/patches/releases/tag/v1.6.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
 <details open>
 <summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
 <br>
@@ -25,15 +25,15 @@ Click here to add these patches to Morphe: https://morphe.software/add-source?gi
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Allow screenshots and screen recording](#allow-screenshots-and-screen-recording) | Removes preview hiding, capture restrictions, FLAG_SECURE flags, and detection callbacks. | • Enable Recent App Previews<br>• Remove Capture Restrictions<br>• Remove FLAG_SECURE<br>• Bypass Screenshot Detection |
-| [Bypass root and debugger checks](#bypass-root-and-debugger-checks) | Reports the debugger as disconnected and hides root indicator files from existence checks, defeating common detection heuristics. | • Bypass Debugger Checks<br>• Bypass Root File Checks |
-| [Disable analytics collection](#disable-analytics-collection) | Disables Firebase Analytics, Crashlytics, and Performance Monitoring data collection by forcing their manifest meta-data flags to false. | • Disable Firebase Analytics<br>• Disable Crashlytics<br>• Disable Performance Monitoring |
+| [Bypass root and debugger checks](#bypass-root-and-debugger-checks) | Reports the debugger as disconnected, hides root indicator files from existence checks. Works only on common detection methods. | • Bypass Debugger Checks<br>• Bypass Root File Checks |
+| [Disable analytics collection](#disable-analytics-collection) | Disables Firebase Analytics, Crashlytics, and Performance Monitoring data collection. | • Disable Firebase Analytics<br>• Disable Crashlytics<br>• Disable Performance Monitoring |
 | [Disable boot start-up](#disable-boot-start-up) | Removes boot intent filters so the app cannot start itself when the device boots. | • Remove Boot Intent Filters |
-| [Enable app backups](#enable-app-backups) | Allows the app to back up its data by enabling android:allowBackup and removing restrictive backup rules in the application manifest. | • Enable Backups<br>• Remove Backup Rules |
-| [Enable debugging and inspection](#enable-debugging-and-inspection) | Enables application debugging flags, trusts user CA certificates, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest. | • Enable Debugging<br>• Trust User Certificates<br>• Allow Cleartext Traffic<br>• Remove Test-Only Flag |
-| [Open links in browser](#open-links-in-browser) | Stops http and https links from opening inside the app by removing app link verification and link intent filters. | • Remove App Link Verification<br>• Remove Link Intent Filters |
-| [Strip sensitive permissions](#strip-sensitive-permissions) | Strips sensitive Android permissions and package visibility declarations from the application manifest to enhance privacy. | • Strip Camera<br>• Strip Microphone<br>• Strip Location<br>• Strip Sensors<br>• Strip Contacts<br>• Strip Phone & SMS<br>• Strip Calendar<br>• Strip Storage & Media<br>• Strip Nearby Wi-Fi<br>• Strip Overlay Access<br>• Strip Special Access<br>• Remove Queries Declarations<br>• Remove QUERY_ALL_PACKAGES Permission |
-| [Strip trackers and telemetry](#strip-trackers-and-telemetry) | Strips known tracking, analytics, and advertising SDK components from the manifest and nops their runtime calls. | • Strip Google & Firebase Analytics<br>• Strip Facebook Analytics<br>• Strip Attribution Trackers<br>• Strip Crash Reporting Telemetry<br>• Strip Advertising ID Permissions<br>• Disable Tracker SDK Calls |
-| [Unlock screen orientation](#unlock-screen-orientation) | Removes android:screenOrientation locks from activities so the screen follows the device rotation setting. | • Remove Orientation Locks |
+| [Enable app backups](#enable-app-backups) | Allows the app to back up its data. | • Enable Backups<br>• Remove Backup Rules |
+| [Enable debugging and inspection](#enable-debugging-and-inspection) | Enables debugging flags, trusts user CA certificates, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest. | • Enable Debugging<br>• Trust User Certificates<br>• Allow Cleartext Traffic<br>• Remove Test-Only Flag |
+| [Open links in browser](#open-links-in-browser) | Stops http and https links from opening inside the app. | • Remove App Link Verification<br>• Remove Link Intent Filters |
+| [Strip sensitive permissions](#strip-sensitive-permissions) | Removes sensitive Android permissions from the application. | • Strip Camera<br>• Strip Microphone<br>• Strip Location<br>• Strip Sensors<br>• Strip Contacts<br>• Strip Phone & SMS<br>• Strip Calendar<br>• Strip Storage & Media<br>• Strip Nearby Wi-Fi<br>• Strip Overlay Access<br>• Strip Special Access<br>• Remove Queries Declarations<br>• Remove QUERY_ALL_PACKAGES Permission |
+| [Strip trackers and telemetry](#strip-trackers-and-telemetry) | Strips tracking, analytics, and advertising SDK components from the manifest, and their runtime calls. | • Google & Firebase Analytics<br>• Facebook SDK<br>• Attribution SDKs<br>• Crash Reporting SDKs<br>• Advertising ID & AdServices<br>• Tracker SDK Calls |
+| [Unlock screen orientation](#unlock-screen-orientation) | Forces orientation unlock on apps that force an orientation. | • Remove Orientation Locks |
 
 </details>
 

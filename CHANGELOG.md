@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/sqzass/patches/compare/v1.5.0...v1.6.0) (2026-10-15)
+
+### ✨ New Features
+
+* clarify option descriptions ([5b3eab5](https://github.com/sqzass/patches/commit/5b3eab5b1d757a53b6c11adf7322b7caba2fdd1f))
+
 ## [1.5.0](https://github.com/sqzass/patches/compare/v1.4.0...v1.5.0) (2026-10-12)
 
 ### ✨ New Features
