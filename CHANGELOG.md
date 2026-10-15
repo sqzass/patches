@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/sqzass/patches/compare/v1.7.0...v1.7.1) (2026-10-15)
+
+### 🐛 Bug Fixes
+
+* handle stale instruction indices safely during bytecode patching loops ([deeaad6](https://github.com/sqzass/patches/commit/deeaad66b18e906a9348497c65e4870d759c29f1))
+
 ## [1.7.0](https://github.com/sqzass/patches/compare/v1.6.0...v1.7.0) (2026-10-15)
 
 ### ✨ New Features
