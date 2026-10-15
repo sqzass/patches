@@ -105,7 +105,20 @@ Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed 
 - S1 (2026-10-14): local docs clone created; API research; build blocker diagnosed (401); tracker created;
   shared ConstTracking + forceInvokeResult written; batch A first 4 patches written.
 
-## 🔄 S4 status (2026-10-15) — READ THIS FIRST, supersedes S3 below
+## 🔄 S5 status (2026-10-15) — READ THIS FIRST, supersedes S4/S3 below
+- **ALL PATCHES DONE: 36 files on disk, compile green, pushed to `wip/batch-a`.**
+  spoofing/ (11) · privacy/ (10) · gms/ (2) · integrity/ (5) · monetization/ (4) · heavy/ (4: ChangePackageNamePatch + DexPatch, UniversalCleanup, DexGuard).
+- Commits on `wip/batch-a` (all pushed): `3c7d4c0`, `94ca5b1` (Batch A, as `chore:` — INVISIBLE in release notes),
+  `be9155d` (handoff), `e2d34d3`, `bb41c8d`, `9c9e7c5`, `6937fbf` (4 fat `feat:` commits, one per batch).
+- **CHANGELOG question RESOLVED (user decision):** official morphe-patches uses the IDENTICAL `.releaserc`
+  type→section mapping (`fix`→🐛, `feat`→✨, `bump`→🚀, `perf`→🔧). Their detailed notes come from
+  one-`feat:`-per-patch commit discipline, not from editing CHANGELOG.md (semantic-release OVERWRITES it
+  every release, so the old `# New/# Fixes/# App Support` rewrite plan is dead). User: one-liners are fine,
+  no rework wanted. Leave history as-is.
+- **Remaining before release:** merge `wip/batch-a` → dev (use `chore:`/non-feat merge or squash so no
+  accidental `feat:` to dev/main cuts a release early — actually user wants the release eventually; merge
+  when ready, `feat:` commits present will cut a minor). CI `buildAndroid` check runs on the branch push.
+- Tracker table + S4/S3 sections below are STALE — trust this section instead.
 - **Integrity batch: DONE on disk + compiling.** `all/integrity/` now holds 5 patches, all green in the local compilecheck loop: `BypassAntiTamperPatch.kt` (installer spoof + signature-match + digest, supersedes the old oversized draft), `BypassPairIpPatch.kt`, `BypassPlayLicensingPatch.kt` (force LICENSED + nop deny callbacks), `BypassPlayIntegrityPatch.kt` (force verdict reads/methods, experimental), `DisablePlayProtectPatch.kt` (strip verify filters/roles).
 - Commit `e2d34d3` (already pushed to `wip/batch-a`) held the first two; the three new files are written + compile green but UNCOMMITTED at S4 start — commit them next.
 - **Batch A (spoofing/GMS): DONE + committed** (`3c7d4c0` + `94ca5b1`): 13 patches + `shared/DevicePresets.kt`.
