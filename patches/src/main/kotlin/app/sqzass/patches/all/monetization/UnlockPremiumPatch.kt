@@ -1,6 +1,7 @@
 package app.sqzass.patches.all.monetization
 
-import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
@@ -101,13 +102,12 @@ val unlockPremiumPatch = bytecodePatch(
                 isCandidate = ::isPremiumGetter,
             ) { instructions ->
                 var count = 0
-                for (index in instructions.indices) {
-                    val instruction = instructions[index]
+                // Descending so the inserted return is never revisited.
+                for (index in instructions.indices.reversed()) {
+                    val instruction = instructions.getOrNull(index) ?: continue
                     if (instruction.opcode == Opcode.RETURN && instruction is OneRegisterInstruction) {
-                        replaceInstructions(
-                            index,
-                            "const/4 v${instruction.registerA}, 0x1\nreturn v${instruction.registerA}",
-                        )
+                        replaceInstruction(index, "const/4 v${instruction.registerA}, 0x1")
+                        addInstruction(index + 1, "return v${instruction.registerA}")
                         count++
                     }
                 }

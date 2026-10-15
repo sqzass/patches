@@ -100,8 +100,8 @@ val devOptionsAdbMaskPatch = bytecodePatch(
                     { ADB_SETTING_KEYS.contains(constStringLoad(it)) },
                     ::isSettingsRead,
                 )
-                for (index in forced) {
-                    val returnType = methodReferenceOf(instructions[index])?.returnType
+                for (index in forced.sortedDescending()) {
+                    val returnType = methodReferenceOf(instructions.getOrNull(index) ?: continue)?.returnType
                     if (forceInvokeResult(instructions, index) { register ->
                             when (returnType) {
                                 "J" -> "const-wide v$register, 0x0"
