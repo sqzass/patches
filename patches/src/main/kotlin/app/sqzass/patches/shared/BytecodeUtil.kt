@@ -1,9 +1,12 @@
 package app.sqzass.patches.shared
 
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.BuilderInstruction
 import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 /**
  * Run [patchMethod] over every method of every class where [isCandidate] holds.
@@ -33,4 +36,33 @@ fun BytecodePatchContext.patchMatchingMethods(
         }
     }
     return patched
+}
+
+private val MOVE_RESULT_OPCODES = setOf(
+    Opcode.MOVE_RESULT,
+    Opcode.MOVE_RESULT_WIDE,
+    Opcode.MOVE_RESULT_OBJECT,
+)
+
+/**
+ * Nop the invoke at [invokeIndex] and overwrite the move-result that immediately
+ * follows it with [smaliForResult], which receives the destination register.
+ *
+ * Noping without a following move-result leaves no place to write the forced
+ * value, so the invoke is skipped in that case (the result register would
+ * otherwise hold a stale value).
+ *
+ * @return Whether a move-result followed the invoke and was replaced.
+ */
+fun MutableMethod.forceInvokeResult(
+    instructions: List<BuilderInstruction>,
+    invokeIndex: Int,
+    smaliForResult: (Int) -> String,
+): Boolean {
+    val next = instructions.getOrNull(invokeIndex + 1)
+    if (next?.opcode !in MOVE_RESULT_OPCODES) return false
+    replaceInstruction(invokeIndex, "nop")
+    val register = (next as OneRegisterInstruction).registerA
+    replaceInstruction(invokeIndex + 1, smaliForResult(register))
+    return true
 }
