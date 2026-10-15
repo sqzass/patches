@@ -88,8 +88,8 @@ val mockLocationFlagStripPatch = bytecodePatch(
             }
             if (bypassSettings) {
                 val forced = findConstArgInvokes(instructions, ::isMockKeyLoad, ::isSettingsRead)
-                for (index in forced) {
-                    val returnType = methodReferenceOf(instructions[index])?.returnType
+                for (index in forced.sortedDescending()) {
+                    val returnType = methodReferenceOf(instructions.getOrNull(index) ?: continue)?.returnType
                     if (forceInvokeResult(instructions, index) { register ->
                             when (returnType) {
                                 "J" -> "const-wide v$register, 0x0"

@@ -7,6 +7,9 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.BuilderInstruction
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import java.util.logging.Logger
+
+private val logger = Logger.getLogger("patchMatchingMethods")
 
 /**
  * Run [patchMethod] over every method of every class where [isCandidate] holds.
@@ -32,7 +35,14 @@ fun BytecodePatchContext.patchMatchingMethods(
     for (type in candidateTypes) {
         for (method in mutableClassDefBy(type).methods) {
             val implementation = method.implementation ?: continue
-            patched += method.patchMethod(implementation.instructions)
+            // ponytail: the dexlib2 instruction list is a live view that shrinks when
+            // deferred switch-payload/NOP fix-ups run; a per-method try/catch keeps one
+            // stale index from aborting the whole patch session.
+            try {
+                patched += method.patchMethod(implementation.instructions)
+            } catch (e: IndexOutOfBoundsException) {
+                logger.warning("Skipping ${method.definingClass}->${method.name}: stale instruction index.")
+            }
         }
     }
     return patched
@@ -59,6 +69,10 @@ fun MutableMethod.forceInvokeResult(
     invokeIndex: Int,
     smaliForResult: (Int) -> String,
 ): Boolean {
+    // Live dexlib2 list resizes on deferred fix-ups, so a collected index may be
+    // stale; bail out instead of throwing so one site never aborts the session.
+    val invoke = instructions.getOrNull(invokeIndex) ?: return false
+    if (!invoke.opcode.name.startsWith("INVOKE")) return false
     val next = instructions.getOrNull(invokeIndex + 1)
     if (next?.opcode !in MOVE_RESULT_OPCODES) return false
     replaceInstruction(invokeIndex, "nop")
