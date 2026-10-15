@@ -59,6 +59,10 @@ fun MutableMethod.forceInvokeResult(
     invokeIndex: Int,
     smaliForResult: (Int) -> String,
 ): Boolean {
+    // Live dexlib2 list resizes on deferred fix-ups, so a collected index may be
+    // stale; bail out instead of throwing so one site never aborts the session.
+    val invoke = instructions.getOrNull(invokeIndex) ?: return false
+    if (!invoke.opcode.name.startsWith("INVOKE")) return false
     val next = instructions.getOrNull(invokeIndex + 1)
     if (next?.opcode !in MOVE_RESULT_OPCODES) return false
     replaceInstruction(invokeIndex, "nop")

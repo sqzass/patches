@@ -169,8 +169,10 @@ val spoofDeviceInfoPatch = bytecodePatch(
             var count = 0
 
             if (spoofBuild) {
-                for (index in instructions.indices) {
-                    val instruction = instructions[index]
+                // Iterate descending over a snapshot: replaceInstruction keeps the
+                // size but pending dexlib2 fix-ups can still shift the live view.
+                for (index in instructions.indices.reversed()) {
+                    val instruction = instructions.getOrNull(index) ?: continue
                     if (!isBuildFieldLoad(instruction) || instruction !is OneRegisterInstruction) continue
                     val reference = (instruction as? ReferenceInstruction)?.reference as? FieldReference ?: continue
                     val value = buildValues[reference.name] ?: continue
@@ -182,7 +184,7 @@ val spoofDeviceInfoPatch = bytecodePatch(
                         instructions,
                         { constStringLoad(it) == key },
                         ::isSystemPropertiesGet,
-                    )) {
+                    ).sortedDescending()) {
                         if (forceInvokeResult(instructions, index) { register -> "const-string v$register, \"$value\"" }) {
                             count++
                         }
@@ -191,10 +193,11 @@ val spoofDeviceInfoPatch = bytecodePatch(
             }
 
             if (spoofSim) {
-                for (index in instructions.indices) {
-                    val value = methodReferenceOf(instructions[index])?.name?.let { telephony[it] }
+                for (index in instructions.indices.reversed()) {
+                    val target = instructions.getOrNull(index) ?: continue
+                    val value = methodReferenceOf(target)?.name?.let { telephony[it] }
                     if (value != null &&
-                        isForcedTelephonyGetter(instructions[index], telephony.keys) &&
+                        isForcedTelephonyGetter(target, telephony.keys) &&
                         forceInvokeResult(instructions, index) { register -> "const-string v$register, \"$value\"" }
                     ) {
                         count++
@@ -203,8 +206,9 @@ val spoofDeviceInfoPatch = bytecodePatch(
             }
 
             if (spoofIds) {
-                for (index in instructions.indices) {
-                    if (isForcedTelephonyGetter(instructions[index], DEVICE_ID_METHODS) &&
+                for (index in instructions.indices.reversed()) {
+                    val target = instructions.getOrNull(index) ?: continue
+                    if (isForcedTelephonyGetter(target, DEVICE_ID_METHODS) &&
                         forceInvokeResult(instructions, index) { register -> "const-string v$register, \"${preset.imei}\"" }
                     ) {
                         count++
