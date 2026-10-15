@@ -1,0 +1,94 @@
+# sqz-patches — WORK TRACKER
+> Replaces the old handoff log. Purpose: track the 26-new-patch expansion across sessions so work can resume with minimal context.
+> Created: 2026-10-14 · Branch: dev
+
+## ⚡ Read first to resume
+- **Goal:** add 26 new patches (table below), then rewrite /CHANGELOG.md (deferred by user).
+- **Validation:** local build IMPOSSIBLE (GitHub Packages returns 401; no GITHUB_TOKEN/gpr creds on this machine).
+  User decision: write everything → push → validate via GitHub CI.
+  CI: release.yml runs on EVERY push; "Verify project compiles" step runs `./gradlew :patches:buildAndroid clean`
+  when semantic-release does not publish (any branch except dev/main, or chore/docs commits).
+  → Push a FEATURE BRANCH to get a compile check. NEVER push `feat:` to dev/main until all patches are done (it cuts a release).
+- **Local docs:** `.local-docs/morphe-patcher/` = gitignored full clone of morphe-patcher source + docs.
+  Read patch API from there instead of fetching GitHub (fetching truncates).
+- **Verified API facts:**
+  - Options: `booleanOption/stringOption/intOption(key, default, values, title, description)` — `values: Map<String,T>`
+    renders a preset DROPDOWN (key = machine value, value = display name) → use for device/SIM presets.
+    File-scope declare + call `optionName()` inside patch to register; declaring inside the patch body auto-registers.
+  - Smali: `replaceInstruction(index, smali)` (1 instruction) · `replaceInstructions(index, "multi-line")` (1→N).
+    Inline smali compiles against the method's CURRENT register count → only use registers that already exist
+    (move-result dest regs; method-entry inserts may clobber dead local v0 / last param). NEVER grow registerCount.
+  - resourcePatch ctx: `document(path)`, `get(path, copy=false)`, `listApkEntries(prefix)`, `delete(path)`.
+  - bytecodePatch ctx: `classDefForEach`, `classDefBy`, `mutableClassDefBy`, shared `patchMatchingMethods`.
+  - `extensions/extension` (.mpe) module exists but NO patch uses extendWith yet — needed if a fake object must be fabricated.
+- **Conventions (all 10 existing patches):** `default = false`; `category(...)`; 3rd-person present-tense description
+  ending in a period; `@Suppress("unused")` on the top-level patch val; dual patches = private UNNAMED bytecodePatch +
+  `dependsOn` + file-scope options (see AllowScreenshotsPatch.kt / StripTrackersPatch.kt); document ceilings with `ponytail:` comments.
+- Shared helpers already written (this effort): `shared/ConstTracking.kt` (argumentRegisters, methodReferenceOf,
+  constStringLoad, narrowConstLoad, findConstArgInvokes) and `BytecodeUtil.forceInvokeResult(instructions, i) { reg -> smali }`.
+
+## 📊 Patch tracker
+Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed → rework · ❓ blocked on user
+
+### Batch A — simple manifest/bytecode (10)
+| File | Patch name | Status | Notes |
+|---|---|---|---|
+| StripVpnChecksPatch.kt | Strip VPN checks | ✍ | prepare→null, hasTransport(VPN)→false, "vpn" string tests→false |
+| TransportTypeSpoofPatch.kt | Spoof network transport type | ✍ | force Wi-Fi transport + NetworkInfo type; hide VPN |
+| SpoofInstallLocationPatch.kt | Spoof install location | ✍ | manifest internalOnly + installLocation field reads→0 |
+| HideAppIconPatch.kt | Hide app icon | ✍ | strips MAIN+LAUNCHER intent filters |
+| MockLocationFlagStripPatch.kt | Mock location flag strip | ☐ | Location.isMock/isFromMockProvider→false; Settings mock_location→0 (AppOps op58 skipped = ceiling) |
+| DevOptionsAdbMaskPatch.kt | Developer options / ADB masking | ☐ | adb_enabled/development_settings_enabled reads→0/"0"; SystemProperties ro.debuggable→0, ro.secure→1 (reflection reads = ceiling) |
+| CustomAppNamePatch.kt | Custom app name | ☐ | stringOption label → android:label literal |
+| AmoledDarkThemePatch.kt | AMOLED dark theme force | ☐ | force known AMOLED pref keys true; optional colors.xml #RRGGBB→#000000 (default off) |
+| GmsCheckStripPatch.kt | GMS check strip | ☐ | isGooglePlayServicesAvailable→0, isUserResolvableError→false, nop showError*; desc notes MicroG heavier-but-stabler |
+| MicroGSupportPatch.kt | MicroG support | ☐ | superset of GMS strip + strip GMS package from <queries> + gms version meta |
+
+### Batch B — device/GPS (4)
+| File | Patch name | Status | Notes |
+|---|---|---|---|
+| SpoofDeviceInfoPatch.kt | Spoof device information | ☐ | PRESETS: `stringOption(values=...)` dropdowns for devices (Samsung/Pixel/Xiaomi/OnePlus/etc.) + SIM presets (carrier/MCC/MNC); rewrites sget Build.* + forces SystemProperties/TelephonyManager results |
+| SpoofGpsPatch.kt | Spoof GPS | ☐ | force Location.getLatitude/getLongitude/... move-result-wide via `const-wide` raw double bits; lat/lon as stringOption |
+| CrossSignalConsistencyPatch.kt | Cross-signal location consistency | ☐ | getScanResults/getAllCellInfo/getCellLocation → null (suppress contradictions; faking BSSIDs needs a geo DB = ceiling) |
+| RandomizePackageSignaturePatch.kt | Randomize package signature | ❓ | USER INTENT UNCLEAR: (a) influence output APK signer cert (probably impossible — signing happens outside patch API), (b) spoof PackageManager signature queries, (c) randomize authorities for clones. ASK USER. |
+
+### Batch C — integrity (5)
+| File | Patch name | Status | Notes |
+|---|---|---|---|
+| BypassAntiTamperPatch.kt | Anti-tamper / integrity check bypass | ☐ | installer package→com.android.vending; checkSignatures→SIGNATURE_MATCH; signature-digest methods→assume-valid (default off, polarity ceiling) |
+| BypassPlayLicensingPatch.kt | Google Play licensing bypass | ☐ | in *licensing* classes: dispatch allow instead of dontAllow/permissionDenied; server-side LVL = ceiling |
+| BypassPlayIntegrityPatch.kt | Play Integrity attestation bypass | ☐ | EXPERIMENTAL: force client-side verdict booleans; server-validated tokens CANNOT be faked offline (document loudly) |
+| BypassPairIpPatch.kt | PairIP bypass/strip | ☐ | RESEARCH FIRST — PairIP mechanics unknown (likely Play-delivered APK anti-tamper metadata/core) |
+| DisablePlayProtectPatch.kt | Play Protect / verify apps disable | ☐ | RESEARCH: strip PACKAGE_NEEDS_VERIFICATION filters/verifier meta + force package_verifier_user_consent |
+
+### Batch D — monetization (4)
+| File | Patch name | Status | Notes |
+|---|---|---|---|
+| MockPlayBillingPatch.kt | Play billing library mock | ☐ | BillingClient isReady→true; startConnection→onBillingSetupFinished(OK) via bundled BillingResult builder; query→empty/OK; + Firebase remote-config force-default (fetch nop / defaults); version-fragile = experimental |
+| UnlockPremiumPatch.kt | Unlock premium / enable pro | ☐ | force boolean getters named isPremium/isPro/... → true; force SharedPreferences.getBoolean for premium-ish keys → true (keys list + user stringOption) |
+| FreeInAppPurchasesPatch.kt | Free in-app purchases | ☐ | force Purchase.getPurchaseState→0 (PURCHASED) + local owned/preference keys; device-local only, no network = stated scope |
+| RewardWithoutAdPatch.kt | Ads-free rewards | ☐ | invoke app's OnUserEarnedRewardListener without ad load (reflection via extension likely); EXPERIMENTAL |
+
+### Batch E — heavy (3)
+| File | Patch name | Status | Notes |
+|---|---|---|---|
+| ChangePackageNamePatch.kt | Change package name | ☐ | manifest package/components/authorities/actions + dex const-string rewrite + getPackageName()→original hook + assets/raw scan; STRIP (not rewrite) uses-permission per user spec; per-group toggles |
+| UniversalCleanupPatch.kt | Universal cleanup / debloat | ☐ | per-category toggles: unused components/intent-filters (dex-references scan), GMS/Firebase stubs, debug components, locales (keep-list), ABI/density splits, META-INF v1 leftovers, assets >threshold; default OFF for destructive ones |
+| DexGuardStringDecryptPatch.kt | DexGuard/ProGuard string decryption hook | ☐ | HARDEST — bounded interpreter for xor-loop decryptors; experimental, default off; do LAST |
+
+## 📜 CHANGELOG.md rules (QUEUED — do after patches exist)
+- Exactly `/CHANGELOG.md`, case-sensitive, root of repo.
+- Sections: `# New` / `# Fixes` / `# App Support` (single # header), each followed by bullets (`-` or `*`).
+- ONE patch per bullet; Morphe extracts ONLY bullet text inside those sections as release notes — no extra text anywhere else.
+- Used to fix the plain release notes Morphe currently shows.
+
+## 🔭 Next steps (in order)
+1. Batch A remainder: MockLocation, DevOptionsAdbMask, CustomAppName, AmoledDarkTheme, GmsCheckStrip, MicroGSupport.
+2. Push feature branch → confirm CI "Verify project compiles" passes → fix ⚠.
+3. Batch B (ask user the RandomizeSignature question), then C, D, E.
+4. Ask user for batch-by-batch review only if they request it.
+5. CHANGELOG.md rewrite (rules above).
+
+## 📝 Session log
+- S1 (2026-10-14): local docs clone created; API research; build blocker diagnosed (401); tracker created;
+  shared ConstTracking + forceInvokeResult written; batch A first 4 patches written.
