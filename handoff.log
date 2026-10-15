@@ -67,11 +67,11 @@ Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed 
 ### Batch C — integrity (5)
 | File | Patch name | Status | Notes |
 |---|---|---|---|
+| BypassPairIpPatch.kt | Bypass PairIP protection | ✍ | RESEARCHED (SafaSafari recipe): restore manifest app class from stub `.super` via classDefForEach, delete libpairipcore.so all ABIs, strip com.pairip components incl. instrumentation. Zip-CRC spoofing NOT possible via patch API (ceiling — moot once native core is deleted). PairIP classes stay as dead dex code (no class-removal API). |
 | BypassAntiTamperPatch.kt | Anti-tamper / integrity check bypass | ☐ | installer package→com.android.vending; checkSignatures→SIGNATURE_MATCH; signature-digest methods→assume-valid (default off, polarity ceiling) |
 | BypassPlayLicensingPatch.kt | Google Play licensing bypass | ☐ | in *licensing* classes: dispatch allow instead of dontAllow/permissionDenied; server-side LVL = ceiling |
 | BypassPlayIntegrityPatch.kt | Play Integrity attestation bypass | ☐ | EXPERIMENTAL: force client-side verdict booleans; server-validated tokens CANNOT be faked offline (document loudly) |
-| BypassPairIpPatch.kt | PairIP bypass/strip | ☐ | RESEARCH FIRST — PairIP mechanics unknown (likely Play-delivered APK anti-tamper metadata/core) |
-| DisablePlayProtectPatch.kt | Play Protect / verify apps disable | ☐ | RESEARCH: strip PACKAGE_NEEDS_VERIFICATION filters/verifier meta + force package_verifier_user_consent |
+| DisablePlayProtectPatch.kt | Play Protect / verify apps disable | ☐ | RESEARCH: APK-side surface is thin — strip PACKAGE_NEEDS_VERIFICATION filters/verifier agent roles; Play Protect blocking of re-signed APKs happens in GMS = ceiling to state in description |
 
 ### Batch D — monetization (4)
 | File | Patch name | Status | Notes |
@@ -104,3 +104,10 @@ Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed 
 ## 📝 Session log
 - S1 (2026-10-14): local docs clone created; API research; build blocker diagnosed (401); tracker created;
   shared ConstTracking + forceInvokeResult written; batch A first 4 patches written.
+
+## 🔄 S3 status (2026-10-15) — READ THIS FIRST, supersedes stale rows above
+- **Batch A: DONE on disk + committed.** All 13 Batch A patches + `shared/DevicePresets.kt` exist and compile green in the local compilecheck loop (S2: 15 patches green incl. cross-signal). Commits `3c7d4c0` + `94ca5b1` on dev hold them. Supersedes "Next steps" item 1 (MockLocation, DevOptionsAdbMask, CustomAppName, AmoledDarkTheme, GmsCheckStrip, MicroGSupport — all written).
+- **On-disk-but-UNCOMMITTED:** `all/integrity/` = `BypassPairIpPatch.kt` (compiles locally) + `BypassAntiTamperPatch.kt` (OVERSIZED draft — must be split, and it used an invented helper that needs fixing). `git status`: `M handoff.log`, `?? all/integrity/`. Nothing else pending.
+- **User decisions since S2:** (a) "Randomize Package Signature" → MERGE signature bypass into the anti-tamper patch, no separate patch. (b) Wording survey of all existing patches DONE (short titles, 3rd-person descriptions, per-option toggles, `default=false`, `category(...)`) — apply to all new patches. (c) CHANGELOG.md rewrite stays QUEUED until patches exist.
+- **Next action:** finish the AntiTamper split (small focused patches, only verified shared helpers from `shared/ConstTracking.kt` + `BytecodeUtil.forceInvokeResult` — verify helper names in those files, never invent), run the local compile loop (`nohup ./gradlew -p .local-docs/compilecheck compileKotlin`, poll `/tmp/compilecheck.log`), `git add` + commit, push a FEATURE branch (never `feat:` to dev/main) for the CI `buildAndroid` check.
+- **Tracker table above is STALE for Batch A (shows ☐) — trust this section instead.** Remaining files to write: Batch B rest (PlayLicensing, PlayIntegrity, PlayProtect), Batch C (6 incl. device-info PRESETS via `stringOption` values-dropdown), Batch D (4), Batch E (3, DexGuard LAST).
