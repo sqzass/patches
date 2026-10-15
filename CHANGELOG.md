@@ -1,3 +1,12 @@
+## [1.7.0](https://github.com/sqzass/patches/compare/v1.6.0...v1.7.0) (2026-10-15)
+
+### ✨ New Features
+
+* add integrity patches to bypass anti-tamper checks and PairIP protection ([e2d34d3](https://github.com/sqzass/patches/commit/e2d34d36a3bd738af3bcf74f8a78f226f901b1e1))
+* add package rename, universal cleanup, DexGuard decrypt hook ([6937fbf](https://github.com/sqzass/patches/commit/6937fbfed80158288aacb54328aaf4e087ee8936))
+* add Play Billing mock, premium unlock, free purchases, ads-free rewards ([9c9e7c5](https://github.com/sqzass/patches/commit/9c9e7c532793d88ff4405ceed68b3b917defb71c))
+* add Play licensing, integrity, and Play Protect bypass patches ([bb41c8d](https://github.com/sqzass/patches/commit/bb41c8d0619bbbbf7ac759b33e19cb9caa0e81c1))
+
 ## [1.6.0](https://github.com/sqzass/patches/compare/v1.5.0...v1.6.0) (2026-10-15)
 
 ### ✨ New Features
