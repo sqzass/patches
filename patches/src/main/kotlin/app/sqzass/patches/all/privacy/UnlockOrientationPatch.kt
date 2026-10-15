@@ -10,7 +10,7 @@ private val logger = Logger.getLogger("UnlockOrientationPatch")
 @Suppress("unused")
 val unlockOrientationPatch = resourcePatch(
     name = "Unlock screen orientation",
-    description = "Removes android:screenOrientation locks from activities so the screen follows the device rotation setting.",
+    description = "Forces orientation unlock on apps that force an orientation.",
     default = false
 ) {
     category("Interface")
@@ -19,7 +19,7 @@ val unlockOrientationPatch = resourcePatch(
         key = "removeOrientationLocks",
         default = true,
         title = "Remove Orientation Locks",
-        description = "Strip android:screenOrientation from every activity so orientation is no longer locked.",
+        description = "Removes android:screenOrientation attributes from activities.",
     )
 
     execute {

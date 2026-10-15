@@ -27,28 +27,28 @@ private val enableRecentPreviewsOption = booleanOption(
     key = "enableRecentPreviews",
     default = true,
     title = "Enable Recent App Previews",
-    description = "Removes android:excludeFromRecents to allow viewing the app thumbnail in the Android app switcher.",
+    description = "Allow viewing the app thumbnail in the app switcher.",
 )
 
 private val removeCaptureRestrictionsOption = booleanOption(
     key = "removeCaptureRestrictions",
     default = true,
     title = "Remove Capture Restrictions",
-    description = "Clears screenshot and screen recording blocking flags from activities.",
+    description = "Remove screenshot and screen recording blocking flags from activities.",
 )
 
 private val removeFlagSecureOption = booleanOption(
     key = "removeFlagSecure",
     default = true,
     title = "Remove FLAG_SECURE",
-    description = "Zeroes FLAG_SECURE in window flag operations so secure applications cannot block capture.",
+    description = "Remove FLAG_SECURE so applications cannot block screen captures (differs from remove capture restrictions).",
 )
 
 private val bypassScreenshotDetectionOption = booleanOption(
     key = "bypassScreenshotDetection",
     default = true,
     title = "Bypass Screenshot Detection",
-    description = "Nops Android screenshot detection callbacks so the app is not notified when a screenshot is taken.",
+    description = "The app is not notified when a screenshot is taken.",
 )
 
 private const val FLAG_SECURE = 0x2000
@@ -67,12 +67,8 @@ private val OR_OPCODES = setOf(
     Opcode.OR_INT_LIT16,
 )
 
-// ponytail: data flow is only tracked through moves and bitwise ORs within a short
-// straight-line window. Flag settings assembled across branches or helper methods are
-// missed; upgrade path is a proper per-method data-flow pass.
 private const val LOOKAHEAD = 10
 
-/** Registers read by [instruction], most-specific interface first (Three extends Two extends One). */
 private fun registersOf(instruction: Instruction): Set<Int> = when (instruction) {
     is FiveRegisterInstruction -> listOf(
         instruction.registerC,
@@ -95,10 +91,6 @@ private fun isFlagSecureLoad(instruction: Instruction): Boolean =
         instruction is NarrowLiteralInstruction &&
         instruction.narrowLiteral == FLAG_SECURE
 
-/**
- * Whether the constant loaded at [index] into [register] flows into a
- * Window.addFlags/setFlags call or an assignment to LayoutParams.flags.
- */
 private fun feedsWindowFlagSet(instructions: List<Instruction>, index: Int, register: Int): Boolean {
     val derived = mutableSetOf(register)
     val end = minOf(index + 1 + LOOKAHEAD, instructions.size)
@@ -145,7 +137,6 @@ private fun feedsWindowFlagSet(instructions: List<Instruction>, index: Int, regi
     return false
 }
 
-/** Indices of constant loads that feed a secure-flag window operation. */
 private fun findFlagSecureLoads(instructions: List<Instruction>): List<Int> =
     instructions.indices.filter { index ->
         val instruction = instructions[index]
@@ -153,10 +144,6 @@ private fun findFlagSecureLoads(instructions: List<Instruction>): List<Int> =
             feedsWindowFlagSet(instructions, index, (instruction as OneRegisterInstruction).registerA)
     }
 
-// Matched by name because call-site method references may point at Activity subclasses
-// that inherit these framework methods rather than at android.app.Activity itself.
-// Both methods are void, so replacing the invoke with nop cannot leave a dangling
-// move-result, and noping the pair keeps register/unregister balanced.
 private val SCREEN_CAPTURE_CALLBACK_METHODS = setOf(
     "registerScreenCaptureCallback",
     "unregisterScreenCaptureCallback",
@@ -167,9 +154,6 @@ private fun isScreenCaptureCallbackCall(instruction: Instruction): Boolean {
     return reference.name in SCREEN_CAPTURE_CALLBACK_METHODS && reference.returnType == "V"
 }
 
-
-// Internal patch that is not shown in Morphe Manager or CLI patch list,
-// but is required for the screenshot patch to fully allow capture.
 @Suppress("unused")
 private val allowScreenshotsInternalPatch = bytecodePatch {
     execute {

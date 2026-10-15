@@ -37,9 +37,6 @@ val disableBootStartPatch = resourcePatch(
         }
 
         document("AndroidManifest.xml").use { document ->
-            // Only the boot intent-filter is removed, never the receiver or service
-            // element itself: the app may still start components explicitly at runtime,
-            // and deleting them would crash such call sites.
             val filters = collectElements(document, listOf("receiver", "service")) { true }
                 .flatMap { owner -> collectDescendants(owner, "intent-filter") }
 

@@ -10,7 +10,7 @@ private val logger = Logger.getLogger("EnableAppBackupsPatch")
 @Suppress("unused")
 val enableAppBackupsPatch = resourcePatch(
     name = "Enable app backups",
-    description = "Allows the app to back up its data by enabling android:allowBackup and removing restrictive backup rules in the application manifest.",
+    description = "Allows the app to back up its data.",
     default = false
 ) {
     category("General")
@@ -26,7 +26,7 @@ val enableAppBackupsPatch = resourcePatch(
         key = "removeBackupRules",
         default = true,
         title = "Remove Backup Rules",
-        description = "Removes android:fullBackupContent and android:dataExtractionRules so the system default rules (back up everything) apply.",
+        description = "Removes android:fullBackupContent and android:dataExtractionRules.",
     )
 
     execute {
@@ -48,10 +48,6 @@ val enableAppBackupsPatch = resourcePatch(
             }
 
             if (removeBackupRulesOption.value == true) {
-                // ponytail: dropping the rules falls back to the system default of
-                // backing up everything; cloud/OEM transports may still exclude data
-                // via their own policy. Upgrade path: write explicit permissive
-                // fullBackupContent/dataExtractionRules XML instead.
                 var removed = 0
                 for (attribute in listOf("android:fullBackupContent", "android:dataExtractionRules")) {
                     if (appElement.hasAttribute(attribute)) {

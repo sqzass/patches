@@ -102,7 +102,7 @@ private val MICROPHONE_FEATURES = setOf(
 @Suppress("unused")
 val stripPermissionsPatch = resourcePatch(
     name = "Strip sensitive permissions",
-    description = "Strips sensitive Android permissions and package visibility declarations from the application manifest to enhance privacy.",
+    description = "Removes sensitive Android permissions from the application.",
     default = false
 ) {
     category("Privacy")
@@ -111,21 +111,21 @@ val stripPermissionsPatch = resourcePatch(
         key = "stripCamera",
         default = true,
         title = "Strip Camera",
-        description = "Remove camera access permissions (android.permission.CAMERA).",
+        description = "Remove camera access permissions.",
     )
 
     val stripMicrophoneOption = booleanOption(
         key = "stripMicrophone",
         default = true,
         title = "Strip Microphone",
-        description = "Remove microphone and audio recording permissions (android.permission.RECORD_AUDIO, etc.).",
+        description = "Remove microphone and audio recording permissions.",
     )
 
     val stripLocationOption = booleanOption(
         key = "stripLocation",
         default = false,
         title = "Strip Location",
-        description = "Remove location tracking permissions (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, etc.).",
+        description = "Remove location tracking permissions.",
     )
 
     val stripSensorsOption = booleanOption(
@@ -139,49 +139,49 @@ val stripPermissionsPatch = resourcePatch(
         key = "stripContacts",
         default = false,
         title = "Strip Contacts",
-        description = "Remove contacts access permissions (READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS).",
+        description = "Remove contacts access permissions.",
     )
 
     val stripPhoneSmsOption = booleanOption(
         key = "stripPhoneSms",
         default = false,
         title = "Strip Phone & SMS",
-        description = "Remove phone, call log, and SMS permissions (READ_PHONE_STATE, READ_CALL_LOG, READ_SMS, SEND_SMS, etc.).",
+        description = "Remove phone, call log, and SMS permissions.",
     )
 
     val stripCalendarOption = booleanOption(
         key = "stripCalendar",
         default = false,
         title = "Strip Calendar",
-        description = "Remove calendar access permissions (READ_CALENDAR, WRITE_CALENDAR).",
+        description = "Remove calendar access permissions.",
     )
 
     val stripStorageOption = booleanOption(
         key = "stripStorage",
         default = false,
         title = "Strip Storage & Media",
-        description = "Remove media and storage permissions (READ_MEDIA_IMAGES, READ_EXTERNAL_STORAGE, etc.).",
+        description = "Remove media and storage permissions.",
     )
 
     val stripWifiOption = booleanOption(
         key = "stripWifi",
         default = false,
         title = "Strip Nearby Wi-Fi",
-        description = "Remove nearby Wi-Fi scanning permissions (NEARBY_WIFI_DEVICES, ACCESS_WIFI_STATE, CHANGE_WIFI_STATE). May affect Wi-Fi status display.",
+        description = "Remove nearby Wi-Fi scanning permissions. May affect Wi-Fi status display.",
     )
 
     val stripOverlayOption = booleanOption(
         key = "stripOverlay",
         default = false,
         title = "Strip Overlay Access",
-        description = "Remove permissions that let the app draw over other apps or change system settings (SYSTEM_ALERT_WINDOW, WRITE_SETTINGS).",
+        description = "Remove permissions that let the app draw over other apps or change system settings.",
     )
 
     val stripSpecialAccessOption = booleanOption(
         key = "stripSpecialAccess",
         default = false,
         title = "Strip Special Access",
-        description = "Remove package installer, usage access, and all-files access permissions (REQUEST_INSTALL_PACKAGES, PACKAGE_USAGE_STATS, MANAGE_EXTERNAL_STORAGE).",
+        description = "Remove package installer, usage access, and all-files access permissions.",
     )
 
     val removeQueriesOption = booleanOption(
@@ -254,12 +254,10 @@ val stripPermissionsPatch = resourcePatch(
                     permissionsToStrip.contains(element.getAttribute("android:name"))
                 }
 
-                // Adjust hardware features if their corresponding permissions were stripped.
                 val features = collectElements(document, listOf("uses-feature")) { element ->
                     featuresToDowngrade.contains(element.getAttribute("android:name"))
                 }
                 for (element in features) {
-                    // Mark as not required so app does not refuse to run on devices without the hardware
                     element.setAttribute("android:required", "false")
                     logger.info("Set feature ${element.getAttribute("android:name")} android:required to false")
                 }
@@ -269,7 +267,6 @@ val stripPermissionsPatch = resourcePatch(
                 logger.info("No permissions selected to strip.")
             }
 
-            // Package visibility
             if (removeQueriesOption.value == true) {
                 val removed = removeElements(document, listOf("queries")) { true }
                 logger.info("Removed ${removed.size} <queries> elements.")

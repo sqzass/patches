@@ -20,7 +20,6 @@ private val DEBUGGER_VOID_METHODS = setOf("waitForDebugger")
 
 private val FILE_PROBE_METHODS = setOf("exists", "canExecute", "canRead", "isDirectory")
 
-// Substrings that identify a method probing for su/root artifacts.
 private val ROOT_PATH_FRAGMENTS = setOf(
     "/system/xbin/su",
     "/system/bin/su",
@@ -41,18 +40,12 @@ private val MOVE_RESULT_OPCODES = setOf(
     Opcode.MOVE_RESULT_OBJECT,
 )
 
-/** Whether this string constant is an indicator that the method probes for root. */
 private fun isRootIndicator(instruction: Instruction): Boolean {
     val text = (instruction as? ReferenceInstruction)?.reference
         ?.let { it as? StringReference }?.string ?: return false
     return text == "su" || ROOT_PATH_FRAGMENTS.any { text.contains(it, ignoreCase = true) }
 }
 
-/**
- * Instruction replacements to defeat detection: debugger checks report disconnected
- * and root indicator file probes report absent. Returns index to smali replacement;
- * pairs cover the invoke and its immediately following move-result.
- */
 private fun planReplacements(
     instructions: List<Instruction>,
     bypassDebugger: Boolean,
@@ -61,9 +54,6 @@ private fun planReplacements(
     val replacements = mutableMapOf<Int, String>()
     if (!bypassDebugger && !bypassRoot) return replacements
 
-    // ponytail: a root probe whose path string lives in a different method than the
-    // File.exists call (extracted helpers) is not detected; upgrade path is tracking
-    // string constants across methods.
     val hasRootIndicators = bypassRoot && instructions.any(::isRootIndicator)
 
     fun forceFalse(invokeIndex: Int) {
@@ -101,7 +91,7 @@ private fun planReplacements(
 @Suppress("unused")
 val bypassRootDebuggerChecksPatch = bytecodePatch(
     name = "Bypass root and debugger checks",
-    description = "Reports the debugger as disconnected and hides root indicator files from existence checks, defeating common detection heuristics.",
+    description = "Reports the debugger as disconnected, hides root indicator files from existence checks. Works only on common detection methods.",
     default = false
 ) {
     category("Debugging")

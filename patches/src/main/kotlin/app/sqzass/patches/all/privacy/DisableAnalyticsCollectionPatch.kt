@@ -11,7 +11,7 @@ private val logger = Logger.getLogger("DisableAnalyticsCollectionPatch")
 @Suppress("unused")
 val disableAnalyticsCollectionPatch = resourcePatch(
     name = "Disable analytics collection",
-    description = "Disables Firebase Analytics, Crashlytics, and Performance Monitoring data collection by forcing their manifest meta-data flags to false.",
+    description = "Disables Firebase Analytics, Crashlytics, and Performance Monitoring data collection.",
     default = false
 ) {
     category("Privacy")
@@ -20,21 +20,21 @@ val disableAnalyticsCollectionPatch = resourcePatch(
         key = "disableFirebaseAnalytics",
         default = true,
         title = "Disable Firebase Analytics",
-        description = "Force firebase_analytics_collection_enabled to false in the manifest.",
+        description = "Force firebase_analytics_collection_enabled to false.",
     )
 
     val disableCrashlyticsOption = booleanOption(
         key = "disableCrashlytics",
         default = true,
         title = "Disable Crashlytics",
-        description = "Force firebase_crashlytics_collection_enabled to false in the manifest.",
+        description = "Force firebase_crashlytics_collection_enabled to false.",
     )
 
     val disablePerformanceOption = booleanOption(
         key = "disablePerformanceMonitoring",
         default = true,
         title = "Disable Performance Monitoring",
-        description = "Force firebase_performance_collection_enabled to false in the manifest.",
+        description = "Force firebase_performance_collection_enabled to false.",
     )
 
     execute {
@@ -70,8 +70,6 @@ val disableAnalyticsCollectionPatch = resourcePatch(
 
             for (flag in flags) {
                 if (flag in presentFlags) continue
-                // Absent flags default to collection enabled, so the entry must
-                // be created rather than removed.
                 val created = document.createElement("meta-data")
                 created.setAttribute("android:name", flag)
                 created.setAttribute("android:value", "false")

@@ -11,7 +11,6 @@ private val logger = Logger.getLogger("OpenLinksInBrowserPatch")
 
 private const val VIEW_ACTION = "android.intent.action.VIEW"
 
-/** Whether this intent-filter claims http/https links for the app. */
 private fun Element.isHttpLinkFilter(): Boolean {
     val handlesView = collectDescendants(this, "action").any {
         it.getAttribute("android:name") == VIEW_ACTION
@@ -27,7 +26,7 @@ private fun Element.isHttpLinkFilter(): Boolean {
 @Suppress("unused")
 val openLinksInBrowserPatch = resourcePatch(
     name = "Open links in browser",
-    description = "Stops http and https links from opening inside the app by removing app link verification and link intent filters.",
+    description = "Stops http and https links from opening inside the app.",
     default = false
 ) {
     category("Interface")
@@ -36,14 +35,14 @@ val openLinksInBrowserPatch = resourcePatch(
         key = "removeAutoVerify",
         default = true,
         title = "Remove App Link Verification",
-        description = "Strip android:autoVerify from intent filters so the system stops opening verified links in the app.",
+        description = "Remove android:autoVerify from intent filters.",
     )
 
     val removeLinkFiltersOption = booleanOption(
         key = "removeLinkFilters",
         default = false,
         title = "Remove Link Intent Filters",
-        description = "Remove intent filters that handle http/https links entirely, so links never resolve to this app.",
+        description = "Remove intent filters that handle http/https links.",
     )
 
     execute {

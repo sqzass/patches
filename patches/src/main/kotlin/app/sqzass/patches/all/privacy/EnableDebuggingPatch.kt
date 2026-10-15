@@ -13,7 +13,7 @@ private const val CONFIG_REF = "@xml/sqz_network_security_config"
 @Suppress("unused")
 val enableDebuggingPatch = resourcePatch(
     name = "Enable debugging and inspection",
-    description = "Enables application debugging flags, trusts user CA certificates, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest.",
+    description = "Enables debugging flags, trusts user CA certificates, permits cleartext traffic for proxy inspection, and strips test-only restrictions in the application manifest.",
     default = false
 ) {
     category("Debugging")
@@ -22,28 +22,28 @@ val enableDebuggingPatch = resourcePatch(
         key = "enableDebugging",
         default = true,
         title = "Enable Debugging",
-        description = "Sets android:debuggable to true on the application tag to allow attaching debuggers and profiling tools.",
+        description = "Sets android:debuggable to true on the application tag.",
     )
 
     val trustUserCertsOption = booleanOption(
         key = "trustUserCerts",
         default = true,
         title = "Trust User Certificates",
-        description = "Accept TLS certificates signed by user-installed certificate authorities (e.g. mitmproxy, HTTP Toolkit) in the network security config.",
+        description = "Accept TLS certificates signed by user-installed certificate authorities.",
     )
 
     val allowCleartextTrafficOption = booleanOption(
         key = "allowCleartextTraffic",
         default = true,
         title = "Allow Cleartext Traffic",
-        description = "Sets android:usesCleartextTraffic to true and permits cleartext traffic in the network security config to inspect HTTP communication.",
+        description = "Sets android:usesCleartextTraffic to true and permits cleartext traffic in the network security config.",
     )
 
     val removeTestOnlyOption = booleanOption(
         key = "removeTestOnly",
         default = true,
         title = "Remove Test-Only Flag",
-        description = "Removes android:testOnly if present so the application can be installed normally on production devices.",
+        description = "Removes android:testOnly if present.",
     )
 
     execute {
