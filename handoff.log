@@ -105,7 +105,15 @@ Status: ☐ todo · ✍ written (awaiting CI) · ✅ CI passed · ⚠ CI failed 
 - S1 (2026-10-14): local docs clone created; API research; build blocker diagnosed (401); tracker created;
   shared ConstTracking + forceInvokeResult written; batch A first 4 patches written.
 
-## 🔄 S3 status (2026-10-15) — READ THIS FIRST, supersedes stale rows above
+## 🔄 S4 status (2026-10-15) — READ THIS FIRST, supersedes S3 below
+- **Integrity batch: DONE on disk + compiling.** `all/integrity/` now holds 5 patches, all green in the local compilecheck loop: `BypassAntiTamperPatch.kt` (installer spoof + signature-match + digest, supersedes the old oversized draft), `BypassPairIpPatch.kt`, `BypassPlayLicensingPatch.kt` (force LICENSED + nop deny callbacks), `BypassPlayIntegrityPatch.kt` (force verdict reads/methods, experimental), `DisablePlayProtectPatch.kt` (strip verify filters/roles).
+- Commit `e2d34d3` (already pushed to `wip/batch-a`) held the first two; the three new files are written + compile green but UNCOMMITTED at S4 start — commit them next.
+- **Batch A (spoofing/GMS): DONE + committed** (`3c7d4c0` + `94ca5b1`): 13 patches + `shared/DevicePresets.kt`.
+- **Conventions confirmed:** top-level `@Suppress("unused")` vals named `*Patch`, `default = false`, `category(...)`, per-option toggles, `ponytail:` ceilings; dual patches use private unnamed bytecodePatch + `dependsOn` + file-scope options; only verified shared helpers (`patchMatchingMethods`, `forceInvokeResult`, `methodReferenceOf`, `constStringLoad`, `findConstArgInvokes`, `collectElements`, `collectDescendants`, `removeElements`).
+- **Next action:** commit the 3 new integrity files on `wip/batch-a`, push for CI `buildAndroid` check. Then Batch D (MockPlayBilling, UnlockPremium, FreeInAppPurchases, RewardWithoutAd), Batch E (ChangePackageName, UniversalCleanup, DexGuard LAST). CHANGELOG.md rewrite stays QUEUED.
+- **Tracker table + S3 section below are STALE — trust this section instead.**
+
+## 🔄 S3 status (2026-10-15) — superseded by S4 above
 - **Batch A: DONE on disk + committed.** All 13 Batch A patches + `shared/DevicePresets.kt` exist and compile green in the local compilecheck loop (S2: 15 patches green incl. cross-signal). Commits `3c7d4c0` + `94ca5b1` on dev hold them. Supersedes "Next steps" item 1 (MockLocation, DevOptionsAdbMask, CustomAppName, AmoledDarkTheme, GmsCheckStrip, MicroGSupport — all written).
 - **On-disk-but-UNCOMMITTED:** `all/integrity/` = `BypassPairIpPatch.kt` (compiles locally) + `BypassAntiTamperPatch.kt` (OVERSIZED draft — must be split, and it used an invented helper that needs fixing). `git status`: `M handoff.log`, `?? all/integrity/`. Nothing else pending.
 - **User decisions since S2:** (a) "Randomize Package Signature" → MERGE signature bypass into the anti-tamper patch, no separate patch. (b) Wording survey of all existing patches DONE (short titles, 3rd-person descriptions, per-option toggles, `default=false`, `category(...)`) — apply to all new patches. (c) CHANGELOG.md rewrite stays QUEUED until patches exist.
