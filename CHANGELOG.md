@@ -1,3 +1,9 @@
+## [1.8.1](https://github.com/sqzass/patches/compare/v1.8.0...v1.8.1) (2026-10-25)
+
+### 🐛 Bug Fixes
+
+* stage resource files before document() parse in font attribute rewrite loop ([ed27409](https://github.com/sqzass/patches/commit/ed2740980530ef6a6e311cc1987db37a74e52caa))
+
 ## [1.8.0](https://github.com/sqzass/patches/compare/v1.7.2...v1.8.0) (2026-10-25)
 
 ### ✨ New Features
