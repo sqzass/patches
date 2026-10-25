@@ -4,6 +4,7 @@ import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
 import java.io.File
+import java.io.IOException
 import java.util.logging.Logger
 
 private val logger = Logger.getLogger("CustomFontPatch")
@@ -122,6 +123,11 @@ val customFontPatch = resourcePatch(
                 for (file in xmlFiles) {
                     val relativePath = "res/" + file.relativeTo(resDir).path.replace('\\', '/')
                     try {
+                        // Explicitly stage the file via get() so it is guaranteed to exist
+                        // on disk before Document opens its InputStream.  Without this call
+                        // arsclib may not have extracted the entry yet, causing a
+                        // FileNotFoundException that would silently skip the file.
+                        get(relativePath)
                         document(relativePath).use { doc ->
                             val allNodes = doc.getElementsByTagName("*")
                             for (i in 0 until allNodes.length) {
@@ -134,8 +140,9 @@ val customFontPatch = resourcePatch(
                                 }
                             }
                         }
-                    } catch (_: Exception) {
-                        // Skip binary or malformed XML — not all .xml paths are text documents.
+                    } catch (_: IOException) {
+                        // Skip entries that are binary or not valid XML (e.g. compiled drawables
+                        // with a .xml extension that haven't been decoded to text form).
                     }
                 }
             }
