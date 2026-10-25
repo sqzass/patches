@@ -1,3 +1,9 @@
+## [1.8.2](https://github.com/sqzass/patches/compare/v1.8.1...v1.8.2) (2026-10-25)
+
+### 🐛 Bug Fixes
+
+* drop stale derived register on overwrite in const tracking ([ebb0195](https://github.com/sqzass/patches/commit/ebb0195b0cec0b2c6bcc4854d46deb66cf3ea7bf))
+
 ## [1.8.1](https://github.com/sqzass/patches/compare/v1.8.0...v1.8.1) (2026-10-25)
 
 ### 🐛 Bug Fixes
