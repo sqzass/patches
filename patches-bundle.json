@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-25T14:37:14",
-  "description": "## [1.7.2](https://github.com/sqzass/patches/compare/v1.7.1...v1.7.2) (2026-10-25)\n\n### 🐛 Bug Fixes\n\n* correct Smali literals, signature matching, resource lookups, and manifest attributes across patches ([4b8ef4a](https://github.com/sqzass/patches/commit/4b8ef4a7a32a9221db8b519461d3d71fae92ea6b))",
-  "download_url": "https://github.com/sqzass/patches/releases/download/v1.7.2/patches-1.7.2.mpp",
+  "created_at": "2026-10-25T14:48:19",
+  "description": "## [1.8.0](https://github.com/sqzass/patches/compare/v1.7.2...v1.8.0) (2026-10-25)\n\n### ✨ New Features\n\n* add custom font injection patch (closes [#5](https://github.com/sqzass/patches/issues/5)) ([b91cf04](https://github.com/sqzass/patches/commit/b91cf044d7771be15b5ef581121a9181ab6547af))",
+  "download_url": "https://github.com/sqzass/patches/releases/download/v1.8.0/patches-1.8.0.mpp",
   "signature_download_url": "",
-  "version": "1.7.2"
+  "version": "1.8.0"
 }

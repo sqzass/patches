@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/sqzass/patches/compare/v1.7.2...v1.8.0) (2026-10-25)
+
+### ✨ New Features
+
+* add custom font injection patch (closes [#5](https://github.com/sqzass/patches/issues/5)) ([b91cf04](https://github.com/sqzass/patches/commit/b91cf044d7771be15b5ef581121a9181ab6547af))
+
 ## [1.7.2](https://github.com/sqzass/patches/compare/v1.7.1...v1.7.2) (2026-10-25)
 
 ### 🐛 Bug Fixes
