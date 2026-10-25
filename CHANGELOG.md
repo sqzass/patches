@@ -1,3 +1,9 @@
+## [1.7.2](https://github.com/sqzass/patches/compare/v1.7.1...v1.7.2) (2026-10-25)
+
+### 🐛 Bug Fixes
+
+* correct Smali literals, signature matching, resource lookups, and manifest attributes across patches ([4b8ef4a](https://github.com/sqzass/patches/commit/4b8ef4a7a32a9221db8b519461d3d71fae92ea6b))
+
 ## [1.7.1](https://github.com/sqzass/patches/compare/v1.7.0...v1.7.1) (2026-10-15)
 
 ### 🐛 Bug Fixes
