@@ -2,7 +2,9 @@ package app.sqzass.patches.all.privacy
 
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.resourcePatch
-import org.w3c.dom.Element
+import app.sqzass.patches.shared.PERMISSION_TAGS
+import app.sqzass.patches.shared.collectElements
+import app.sqzass.patches.shared.removeElements
 import java.util.logging.Logger
 
 private val logger = Logger.getLogger("StripPermissionsPatch")
@@ -28,6 +30,62 @@ private val SENSOR_PERMISSIONS = setOf(
     "android.permission.ACTIVITY_RECOGNITION",
 )
 
+private val CONTACTS_PERMISSIONS = setOf(
+    "android.permission.READ_CONTACTS",
+    "android.permission.WRITE_CONTACTS",
+    "android.permission.GET_ACCOUNTS",
+)
+
+private val PHONE_SMS_PERMISSIONS = setOf(
+    "android.permission.READ_PHONE_STATE",
+    "android.permission.READ_PHONE_NUMBERS",
+    "android.permission.CALL_PHONE",
+    "android.permission.ANSWER_PHONE_CALLS",
+    "android.permission.READ_CALL_LOG",
+    "android.permission.WRITE_CALL_LOG",
+    "android.permission.ADD_VOICEMAIL",
+    "android.permission.USE_SIP",
+    "android.permission.PROCESS_OUTGOING_CALLS",
+    "android.permission.READ_SMS",
+    "android.permission.RECEIVE_SMS",
+    "android.permission.RECEIVE_MMS",
+    "android.permission.RECEIVE_WAP_PUSH",
+    "android.permission.SEND_SMS",
+)
+
+private val CALENDAR_PERMISSIONS = setOf(
+    "android.permission.READ_CALENDAR",
+    "android.permission.WRITE_CALENDAR",
+)
+
+private val STORAGE_PERMISSIONS = setOf(
+    "android.permission.READ_EXTERNAL_STORAGE",
+    "android.permission.WRITE_EXTERNAL_STORAGE",
+    "android.permission.READ_MEDIA_IMAGES",
+    "android.permission.READ_MEDIA_VIDEO",
+    "android.permission.READ_MEDIA_AUDIO",
+    "android.permission.ACCESS_MEDIA_LOCATION",
+)
+
+private val WIFI_PERMISSIONS = setOf(
+    "android.permission.NEARBY_WIFI_DEVICES",
+    "android.permission.ACCESS_WIFI_STATE",
+    "android.permission.CHANGE_WIFI_STATE",
+    "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+)
+
+private val OVERLAY_PERMISSIONS = setOf(
+    "android.permission.SYSTEM_ALERT_WINDOW",
+    "android.permission.WRITE_SETTINGS",
+)
+
+private val SPECIAL_ACCESS_PERMISSIONS = setOf(
+    "android.permission.REQUEST_INSTALL_PACKAGES",
+    "android.permission.REQUEST_DELETE_PACKAGES",
+    "android.permission.PACKAGE_USAGE_STATS",
+    "android.permission.MANAGE_EXTERNAL_STORAGE",
+)
+
 private val CAMERA_FEATURES = setOf(
     "android.hardware.camera",
     "android.hardware.camera.autofocus",
@@ -44,28 +102,30 @@ private val MICROPHONE_FEATURES = setOf(
 @Suppress("unused")
 val stripPermissionsPatch = resourcePatch(
     name = "Strip sensitive permissions",
-    description = "Strips sensitive Android permissions (such as camera and microphone access) from the application manifest to enhance privacy.",
+    description = "Removes sensitive Android permissions from the application.",
     default = false
 ) {
+    category("Privacy")
+
     val stripCameraOption = booleanOption(
         key = "stripCamera",
         default = true,
         title = "Strip Camera",
-        description = "Remove camera access permissions (android.permission.CAMERA).",
+        description = "Remove camera access permissions.",
     )
 
     val stripMicrophoneOption = booleanOption(
         key = "stripMicrophone",
         default = true,
         title = "Strip Microphone",
-        description = "Remove microphone and audio recording permissions (android.permission.RECORD_AUDIO, etc.).",
+        description = "Remove microphone and audio recording permissions.",
     )
 
     val stripLocationOption = booleanOption(
         key = "stripLocation",
         default = false,
         title = "Strip Location",
-        description = "Remove location tracking permissions (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, etc.).",
+        description = "Remove location tracking permissions.",
     )
 
     val stripSensorsOption = booleanOption(
@@ -73,6 +133,69 @@ val stripPermissionsPatch = resourcePatch(
         default = false,
         title = "Strip Sensors",
         description = "Remove body sensor and activity recognition permissions.",
+    )
+
+    val stripContactsOption = booleanOption(
+        key = "stripContacts",
+        default = false,
+        title = "Strip Contacts",
+        description = "Remove contacts access permissions.",
+    )
+
+    val stripPhoneSmsOption = booleanOption(
+        key = "stripPhoneSms",
+        default = false,
+        title = "Strip Phone & SMS",
+        description = "Remove phone, call log, and SMS permissions.",
+    )
+
+    val stripCalendarOption = booleanOption(
+        key = "stripCalendar",
+        default = false,
+        title = "Strip Calendar",
+        description = "Remove calendar access permissions.",
+    )
+
+    val stripStorageOption = booleanOption(
+        key = "stripStorage",
+        default = false,
+        title = "Strip Storage & Media",
+        description = "Remove media and storage permissions.",
+    )
+
+    val stripWifiOption = booleanOption(
+        key = "stripWifi",
+        default = false,
+        title = "Strip Nearby Wi-Fi",
+        description = "Remove nearby Wi-Fi scanning permissions. May affect Wi-Fi status display.",
+    )
+
+    val stripOverlayOption = booleanOption(
+        key = "stripOverlay",
+        default = false,
+        title = "Strip Overlay Access",
+        description = "Remove permissions that let the app draw over other apps or change system settings.",
+    )
+
+    val stripSpecialAccessOption = booleanOption(
+        key = "stripSpecialAccess",
+        default = false,
+        title = "Strip Special Access",
+        description = "Remove package installer, usage access, and all-files access permissions.",
+    )
+
+    val removeQueriesOption = booleanOption(
+        key = "removeQueries",
+        default = true,
+        title = "Remove Queries Declarations",
+        description = "Remove all <queries> elements used to probe for other installed packages.",
+    )
+
+    val removeQueryAllPackagesOption = booleanOption(
+        key = "removeQueryAllPackages",
+        default = true,
+        title = "Remove QUERY_ALL_PACKAGES Permission",
+        description = "Remove the QUERY_ALL_PACKAGES permission that grants blanket visibility of installed apps.",
     )
 
     execute {
@@ -97,48 +220,66 @@ val stripPermissionsPatch = resourcePatch(
             permissionsToStrip.addAll(SENSOR_PERMISSIONS)
         }
 
-        if (permissionsToStrip.isEmpty()) {
-            logger.info("No permissions selected to strip.")
-            return@execute
+        if (stripContactsOption.value == true) {
+            permissionsToStrip.addAll(CONTACTS_PERMISSIONS)
+        }
+
+        if (stripPhoneSmsOption.value == true) {
+            permissionsToStrip.addAll(PHONE_SMS_PERMISSIONS)
+        }
+
+        if (stripCalendarOption.value == true) {
+            permissionsToStrip.addAll(CALENDAR_PERMISSIONS)
+        }
+
+        if (stripStorageOption.value == true) {
+            permissionsToStrip.addAll(STORAGE_PERMISSIONS)
+        }
+
+        if (stripWifiOption.value == true) {
+            permissionsToStrip.addAll(WIFI_PERMISSIONS)
+        }
+
+        if (stripOverlayOption.value == true) {
+            permissionsToStrip.addAll(OVERLAY_PERMISSIONS)
+        }
+
+        if (stripSpecialAccessOption.value == true) {
+            permissionsToStrip.addAll(SPECIAL_ACCESS_PERMISSIONS)
         }
 
         document("AndroidManifest.xml").use { document ->
-            val permissionTags = listOf("uses-permission", "uses-permission-sdk-23")
-            val removedPermissions = mutableListOf<String>()
-
-            for (tag in permissionTags) {
-                val nodes = document.getElementsByTagName(tag)
-                val elementsToRemove = mutableListOf<Element>()
-
-                for (i in 0 until nodes.length) {
-                    val element = nodes.item(i) as? Element ?: continue
-                    val name = element.getAttribute("android:name")
-                    if (permissionsToStrip.contains(name)) {
-                        elementsToRemove.add(element)
-                        removedPermissions.add(name)
-                    }
+            if (permissionsToStrip.isNotEmpty()) {
+                val removedPermissions = removeElements(document, PERMISSION_TAGS) { element ->
+                    permissionsToStrip.contains(element.getAttribute("android:name"))
                 }
 
-                for (element in elementsToRemove) {
-                    element.parentNode?.removeChild(element)
+                val features = collectElements(document, listOf("uses-feature")) { element ->
+                    featuresToDowngrade.contains(element.getAttribute("android:name"))
                 }
+                for (element in features) {
+                    element.setAttribute("android:required", "false")
+                    logger.info("Set feature ${element.getAttribute("android:name")} android:required to false")
+                }
+
+                logger.info("Successfully stripped permissions: $removedPermissions")
+            } else {
+                logger.info("No permissions selected to strip.")
             }
 
-            // Adjust hardware features if their corresponding permissions were stripped
-            if (featuresToDowngrade.isNotEmpty()) {
-                val featureNodes = document.getElementsByTagName("uses-feature")
-                for (i in 0 until featureNodes.length) {
-                    val element = featureNodes.item(i) as? Element ?: continue
-                    val featureName = element.getAttribute("android:name")
-                    if (featuresToDowngrade.contains(featureName)) {
-                        // Mark as not required so app does not refuse to run on devices without the hardware
-                        element.setAttribute("android:required", "false")
-                        logger.info("Set feature $featureName android:required to false")
-                    }
-                }
+            if (removeQueriesOption.value == true) {
+                val removed = removeElements(document, listOf("queries")) { true }
+                logger.info("Removed ${removed.size} <queries> elements.")
             }
 
-            logger.info("Successfully stripped permissions: $removedPermissions")
+            if (removeQueryAllPackagesOption.value == true) {
+                val removed = removeElements(document, PERMISSION_TAGS) { element ->
+                    element.getAttribute("android:name") == "android.permission.QUERY_ALL_PACKAGES"
+                }
+                if (removed.isNotEmpty()) {
+                    logger.info("Removed permissions: $removed")
+                }
+            }
         }
     }
 }

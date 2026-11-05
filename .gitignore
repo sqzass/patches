@@ -119,6 +119,9 @@ gradle-app.setting
 # Ignore vscode config
 .vscode/
 
+# Local API docs cached from morphe-patcher (not part of the repo)
+.local-docs/
+
 # Dependency directories
 node_modules/
 
@@ -128,3 +131,6 @@ node_modules/
 # Ignore IDEA files
 .idea/
 local.properties
+
+# The work tracker must survive clones; it overrides the *.log rule above
+!handoff.log
