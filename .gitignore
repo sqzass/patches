@@ -132,5 +132,9 @@ node_modules/
 .idea/
 local.properties
 
-# The work tracker must survive clones; it overrides the *.log rule above
-!handoff.log
+# Scripts (duh), currently holds a decomp for APKs.
+scripts/
+
+# Local APK workspace and input
+workspaces/
+apks/
