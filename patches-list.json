@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.9.0-dev.1",
+  "version": "1.9.0",
   "patches": [
     {
       "name": "AMOLED dark theme force",
@@ -1047,7 +1047,7 @@
           "description": "Locally-administered MAC (e.g. 02:1A:2B:3C:4D:5E). Leave blank to generate a random one.",
           "required": false,
           "type": "kotlin.String",
-          "default": "02:DC:BA:DF:98:77",
+          "default": "02:29:25:5F:67:F4",
           "values": null
         }
       ]
@@ -1101,7 +1101,7 @@
           "description": "Value reported by AdvertisingIdClient.getId(). Leave blank to generate a random ID.",
           "required": false,
           "type": "kotlin.String",
-          "default": "759fe60d-d47e-463c-92d8-b79e3bc77ec0",
+          "default": "20df6447-6062-4374-9819-703c37159dbf",
           "values": null
         },
         {
