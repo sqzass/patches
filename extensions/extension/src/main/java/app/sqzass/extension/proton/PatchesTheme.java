@@ -154,9 +154,7 @@ public final class PatchesTheme {
         return Math.round(value * context.getResources().getDisplayMetrics().density);
     }
 
-}
 
-    }
 
     public static int chevronRightDrawable() {
         return 0;
