@@ -189,7 +189,6 @@ public final class SwitchStyle {
 
     }
 
-}
 
 
     private SwitchStyle() {
@@ -217,3 +216,4 @@ public final class SwitchStyle {
         final MaterialStyle style = MaterialStyle.resolve(context, primaryColor);
         return (style != null) ? style.track() : null;
     }
+}

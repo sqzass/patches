@@ -80,6 +80,8 @@ public final class PatchesTheme {
 
     public static int backArrowDrawable() {
         return 0;
+    }
+
     public static void tintTextInput(EditText input, int accentColor) {
         final int inactiveColor = iconDisabled(input.getContext());
 
