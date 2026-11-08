@@ -1,8 +1,10 @@
 /* Copyright (C) 2026 sqzass
  * SPDX-License-Identifier: GPL-3.0-only
  */
+
 package app.sqzass.patches.protonvpn.misc.restrictions
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.mutableClassDefBy

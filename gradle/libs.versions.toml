@@ -13,8 +13,6 @@ spring-javaformat = "0.0.43"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-# Gradle plugins adds the dependency during build, this declaration is here only for dependabot to provide updates.
-#noinspection UnusedVersionCatalogEntry
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
 morphe-patches-library = { module = "app.morphe:morphe-patches-library", version.ref = "morphe-patches-library" }
 morphe-extensions = { module = "app.morphe:morphe-extensions", version.ref = "morphe-patches-library" }
