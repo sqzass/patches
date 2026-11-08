@@ -12,16 +12,13 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcodes
-import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
-import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile
 import com.android.tools.smali.dexlib2.formatter.DexFormatter
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
-import java.nio.ByteBuffer
 
 internal fun descriptor(method: MethodReference): String = DexFormatter.INSTANCE.getMethodDescriptor(method)
 
@@ -43,13 +40,12 @@ private fun MutableClass.compileMethod(
     registers: Int,
     smali: String,
 ): MutableMethod {
-    val hasTryBlocks = ".catch" in smali
-    val implementation = if (hasTryBlocks) {
-        assembleImplementation(name, parameters, returnType, accessFlags, registers, smali)
-    } else {
-        MutableMethodImplementation(registers).apply {
-            addInstructionsWithLabels(this, 0, smali)
-        }
+    if (".catch" in smali) {
+        throw PatchException("Try-catch blocks in raw smali strings are not supported by this helper. Use the dexlib2 API directly.")
+    }
+    
+    val implementation = ImmutableMethodImplementation(registers).apply {
+        addInstructionsWithLabels(this, 0, smali)
     }
 
     return ImmutableMethod(
@@ -61,30 +57,7 @@ private fun MutableClass.compileMethod(
         null,
         null,
         implementation,
-    ).toMutable().apply {
-        if (!hasTryBlocks) addInstructionsWithLabels(this, 0, smali)
-    }
-}
-private fun MutableClass.assembleImplementation(
-    name: String,
-    parameters: List<ImmutableMethodParameter>,
-    returnType: String,
-    accessFlags: Int,
-    registers: Int,
-    smali: String,
-): MutableMethodImplementation {
-    val signature = "$name(${parameters.joinToString("") { it.type }})$returnType"
-    val source = """
-        .class public $type
-        .super Ljava/lang/Object;
-        .method ${AccessFlags.formatAccessFlagsForMethod(accessFlags)} $signature
-            .registers $registers
-            $smali
-        .end method
-    """.trimIndent()
-    val method = DexBackedDexFile(Opcodes.getDefault(), ByteBuffer.wrap(assembleDex(listOf(source))))
-        .classes.single().methods.single()
-    return MutableMethodImplementation(checkNotNull(method.implementation) { "$type->$signature has no body" })
+    ).toMutable()
 }
 
 internal fun MutableClass.addMethod(
@@ -180,8 +153,4 @@ internal fun MutableClass.addDefaultConstructor() {
             "invoke-direct {p0}, Ljava/lang/Object;-><init>()V\nreturn-void",
         ),
     )
-}
-
-    return ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation)
-        .toMutable().apply { if (!hasTryBlocks) addInstructionsWithLabels(this, 0, smali) }
 }

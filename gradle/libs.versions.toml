@@ -1,5 +1,5 @@
 [versions]
-morphe-patcher = "1.15.1"
+morphe-patcher = "2.1.0"
 #noinspection GradleDependency
 smali = "d92701d947"
 gson = "2.15.0"
@@ -15,7 +15,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 # Gradle plugins adds the dependency during build, this declaration is here only for dependabot to provide updates.
 #noinspection UnusedVersionCatalogEntry
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
-morphe-extensions = { module = "app.morphe:morphe-extensions", version = "1.15.1" }
+morphe-extensions = { module = "app.morphe:morphe-extensions", version = "2.1.0" }
 junit = { module = "junit:junit", version.ref = "junit" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
