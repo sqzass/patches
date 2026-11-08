@@ -4,10 +4,10 @@
 
 package app.sqzass.patches.protonvpn.misc.restrictions
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.util.returnEarly
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 
@@ -24,7 +24,7 @@ val disableForcedUpdatePatch: BytecodePatch = bytecodePatch(
         val method = clazz.methods.firstOrNull { it.name == "shouldForceUpdate" || it.name == "checkUpdate" }
             ?: throw IllegalStateException("Force update method not found")
         
-        method.implementation = null
-        method.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
+        // This cleanly replaces the method body to just return false
+        method.returnEarly(false)
     }
 }
