@@ -29,4 +29,4 @@ compose_ui = { module = "androidx.compose.ui:ui" }
 compose_runtime = { module = "androidx.compose.runtime:runtime" }
 compose_foundation = { module = "androidx.compose.foundation:foundation" }
 compose_webkit = { module = "androidx.webkit:webkit" }
-spring = { javaformat = { checkstyle = { module = "org.checkerframework:checker-qual" } } }
+spring-javaformat-checkstyle = { module = "org.checkerframework:checker-qual", version.ref = "spring_javaformat" }
