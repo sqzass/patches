@@ -153,9 +153,6 @@ public final class PatchesTheme {
     public static int dpToPx(Context context, int value) {
         return Math.round(value * context.getResources().getDisplayMetrics().density);
     }
-    }
-
-
 
     public static int chevronRightDrawable() {
         return 0;
