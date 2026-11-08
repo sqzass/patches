@@ -18,3 +18,4 @@ internal object AppCompatibilities {
             AppTarget(version = "5.21.9.0", versionCode = 605210900, minSdk = 26),
         ),
     )
+}
