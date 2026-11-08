@@ -24,7 +24,6 @@ val disableForcedUpdatePatch: BytecodePatch = bytecodePatch(
         val method = clazz.methods.firstOrNull { it.name == "shouldForceUpdate" || it.name == "checkUpdate" }
             ?: throw IllegalStateException("Force update method not found")
         
-        // Clear the existing body and replace it with a simple "return false"
         method.implementation = null
         method.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
     }
