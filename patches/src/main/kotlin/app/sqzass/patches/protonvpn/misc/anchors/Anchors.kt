@@ -25,7 +25,7 @@ internal open class ToStringFingerprint(prefix: String) : Fingerprint(
     name = "toString",
     returnType = "Ljava/lang/String;",
     parameters = emptyList(),
-    strings = listOf(string(prefix, StringComparisonType.STARTS_WITH)),
+    filters = listOf(string(prefix, StringComparisonType.STARTS_WITH)),
 )
 
 private const val EXTENSION_KOTLIN_UNIT_TYPE = "Lkotlin/Unit;"
