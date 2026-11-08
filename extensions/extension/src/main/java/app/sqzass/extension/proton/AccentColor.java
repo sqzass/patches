@@ -77,6 +77,9 @@ public final class AccentColor {
             return Color.parseColor(color);
         } catch (Throwable ex) {
             return 0;
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.O)
     private static int applyLabAdjustment(int argb, LabAdjustment adjustment) {
         final float[] labComponents = argbToLab(argb);
@@ -153,12 +156,6 @@ public final class AccentColor {
             this.stockChroma = stockChroma;
         }
 
-    }
-
-}
-
-        }
-    }
 
 
     private static final double MAX_CHROMA_SCALE = 2.5;
@@ -207,3 +204,4 @@ public final class AccentColor {
         final LabAdjustment adjustment = computeLabAdjustment(preset);
         return (adjustment != null) ? applyLabAdjustment(stockAccent, adjustment) : stockAccent;
     }
+}
