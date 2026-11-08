@@ -22,20 +22,29 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v6
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: lts/*
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
+      # Run Gradle first so any Android/Gradle configuration failure includes a stack trace.
+      - name: Verify Gradle configuration
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew help --stacktrace --no-daemon
+
       # Semantic release runs its own Gradle build command.
-      # Only dev and main branch will generate a release as specified by .releaserc
+      # Only dev and main branches will generate a release, as specified by .releaserc.
       - name: Release
         uses: cycjimmy/semantic-release-action@v8
         id: release
