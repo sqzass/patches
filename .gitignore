@@ -139,3 +139,6 @@ scripts/
 # Local APK workspace and input
 workspaces/
 apks/
+
+# Assisting in these sloppy patches
+.clinerules
