@@ -30,7 +30,7 @@ import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
-import androidx.annotation.RequiresApi;
+import android.annotation.TargetApi;
 
 public final class PatchesTheme {
 
@@ -93,7 +93,7 @@ public final class PatchesTheme {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @TargetApi(Build.VERSION_CODES.Q)
     private static void tintTextCursor(EditText input, int accentColor) {
         final Drawable cursor = input.getTextCursorDrawable();
         if (cursor == null) {

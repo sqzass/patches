@@ -59,7 +59,11 @@ public final class AccentColor {
         }
     }
 
-    static int computeLabAdjustment(String preset) {
+    static LabAdjustment computeLabAdjustment(String preset) {
+        if (preset == null || preset.isEmpty()) {
+            return null;
+        }
+        // Preset parsing logic would go here for custom accent adjustment
         return null;
     }
 

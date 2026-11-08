@@ -48,7 +48,7 @@ private fun MutableClass.compileMethod(
         assembleImplementation(name, parameters, returnType, accessFlags, registers, smali)
     } else {
         MutableMethodImplementation(registers).apply {
-            addInstructionsWithLabels(0, smali)
+            addInstructionsWithLabels(this, 0, smali)
         }
     }
 
@@ -62,7 +62,7 @@ private fun MutableClass.compileMethod(
         null,
         implementation,
     ).toMutable().apply {
-        if (!hasTryBlocks) addInstructionsWithLabels(0, smali)
+        if (!hasTryBlocks) addInstructionsWithLabels(this, 0, smali)
     }
 }
 private fun MutableClass.assembleImplementation(
@@ -182,7 +182,6 @@ internal fun MutableClass.addDefaultConstructor() {
     )
 }
 
-    }
     return ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation)
-        .toMutable().apply { if (!hasTryBlocks) addInstructionsWithLabels(0, smali) }
+        .toMutable().apply { if (!hasTryBlocks) addInstructionsWithLabels(this, 0, smali) }
 }
