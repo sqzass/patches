@@ -3,7 +3,7 @@
  */
 
 package app.sqzass.patches.protonvpn.misc.restrictions
-
+import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
@@ -19,7 +19,7 @@ val disableInAppReviewsPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // In-app reviews are triggered by review prompts - intercept the method that shows them
-        val clazz = findClass("Lcom/protonvpn/android/redesign/app/ui/review/ReviewPromptHandler;")
+        val clazz = mutableClassDefBy("Lcom/protonvpn/android/redesign/app/ui/review/ReviewPromptHandler;")
         val showMethod = clazz.findMethod("showReviewPrompt", "()V")
             ?: findMethodInClazz(clazz, "requestReview", "()V")
             ?: throw IllegalStateException("Review prompt method not found")
