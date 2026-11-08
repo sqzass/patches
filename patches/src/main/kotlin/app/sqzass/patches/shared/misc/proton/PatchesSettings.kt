@@ -97,6 +97,7 @@ internal fun patchesSettingsActivityPatch(themeStyle: String, hostActivity: Stri
                 )
             }
     }
+}   
     private fun BytecodePatchContext.replacePatchesThemeStubs() {
         with(mutableClassDefBy(PATCHES_THEME_CLASS)) {
             replaceResourceIdStubs(
@@ -167,12 +168,3 @@ internal fun patchesSettingsActivityPatch(themeStyle: String, hostActivity: Stri
                 """,
             )
     }
-
-    private object PatchesSettingsVersion
-
-                        getReference<MethodReference>()?.name == "startActivity"
-                }
-                replaceInstruction(index, "invoke-virtual { p0, p1 }, $PATCHES_COMPONENT_FACTORY_CLASS->startActivity(Landroid/app/Activity;Landroid/content/Intent;)Landroid/content/Intent;")
-            }
-    }
-}
