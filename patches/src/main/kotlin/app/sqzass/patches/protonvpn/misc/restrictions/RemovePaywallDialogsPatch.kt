@@ -20,10 +20,9 @@ val removePaywallDialogsPatch: BytecodePatch = bytecodePatch(
     execute {
         // Paywall dialogs are shown in various activities - intercept the methods that show them
         // Look for methods that display upgrade prompts or paywall UI
-        val clazz = findClass("Lcom/protonvpn/android/redesign/app/ui/upsell/TvUpsellActivity;")
-        val showMethod = clazz.findMethod("onCreate", "(Landroid/os/Bundle;)V")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/redesign/app/ui/upsell/TvUpsellActivity;")
+        val showMethod =  clazz.methods.singleOrNull { it.name == ("onCreate", "(Landroid/os/Bundle;)V")
             ?: throw IllegalStateException("Upsell activity method not found")
-        showMethod.clearBody()
-        showMethod.addInstructions(0, "return-void")
+        showMethod.returnEarly(0)
     }
 }

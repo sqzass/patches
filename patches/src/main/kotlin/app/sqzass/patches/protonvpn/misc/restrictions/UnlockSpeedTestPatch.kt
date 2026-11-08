@@ -19,15 +19,11 @@ val unlockSpeedTestPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // Speed test is controlled by a feature flag - intercept the method that checks it
-        val clazz = findClass("Lcom/protonvpn/android/redesign/app/ui/speed/SpeedTestManager;")
-        val speedMethod = clazz.findMethod("isSpeedTestEnabled", "()Z")
-            ?: findMethodInClazz(clazz, "checkSpeed", "()Z")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/redesign/app/ui/speed/SpeedTestManager;")
+        val speedMethod =  clazz.methods.singleOrNull { it.name == ("isSpeedTestEnabled", "()Z")
+            ?: clazz.methods.singleOrNull { it.name == "checkSpeed" && it.parameterTypes.size == 1 }
             ?: throw IllegalStateException("Speed test method not found")
-        speedMethod.clearBody()
-        speedMethod.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        speedMethod.returnEarly(true)
     }
 }
 
-private fun findMethodInClazz(clazz: any, name: String, paramDesc: String): any {
-    return clazz.methods.singleOrNull { it.name == name && it.parameterTypes.size == 1 } ?: throw IllegalStateException("Method not found")
-}

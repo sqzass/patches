@@ -21,6 +21,8 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchSingle
+
+private const val LOCAL_USER_SETTINGS = "Lcom/protonvpn/android/settings/data/LocalUserSettings;"
 import app.sqzass.patches.protonvpn.misc.anchors.vpnUserType
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import com.android.tools.smali.dexlib2.Opcode
@@ -30,7 +32,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-private const val LOCAL_USER_SETTINGS = "Lcom/protonvpn/android/settings/data/LocalUserSettings;"
 
 internal fun BytecodePatchContext.restrictionGuardFingerprint(settingGetter: String): Fingerprint {
     val vpnUser = vpnUserType
@@ -46,7 +47,7 @@ internal fun BytecodePatchContext.restrictionGuardFingerprint(settingGetter: Str
         ),
         custom = { method, _ ->
             method.parameterTypes.firstOrNull()?.toString() == LOCAL_USER_SETTINGS &&
-                method.parameterTypes.any { it.toString() == vpnUser }
+                method.parameters.any { it.toString() == vpnUser }
         },
     )
 }

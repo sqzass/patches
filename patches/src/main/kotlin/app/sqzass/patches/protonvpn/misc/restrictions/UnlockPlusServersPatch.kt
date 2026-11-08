@@ -4,7 +4,7 @@
  */
 package app.sqzass.patches.protonvpn.misc.restrictions
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
@@ -19,10 +19,9 @@ val unlockPlusServersPatch: BytecodePatch = bytecodePatch(
     dependsOn(patchesSettingsPatch)
 
     execute {
-        val clazz = findClass("Lcom/protonvpn/android/servers/Server;")
-        val method = clazz.findMethod("isPlusServer", "()Z")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/servers/Server;")
+        val method =  clazz.methods.singleOrNull { it.name == ("isPlusServer", "()Z")
             ?: throw IllegalStateException("isPlusServer not found")
-        method.clearBody()
-        method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        method.returnEarly(true)
     }
 }

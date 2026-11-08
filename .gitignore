@@ -140,5 +140,8 @@ scripts/
 workspaces/
 apks/
 
+# Gradle builds
+patches/bin
+
 # Assisting in these sloppy patches
 .clinerules

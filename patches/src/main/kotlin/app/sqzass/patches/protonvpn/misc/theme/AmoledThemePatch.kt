@@ -4,20 +4,11 @@
  */
 package app.sqzass.patches.protonvpn.misc.theme
 
-import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 import app.sqzass.patches.shared.misc.proton.AMOLED_THEME_CLASS
-import app.sqzass.patches.shared.misc.proton.amoledBackgroundOverlayPatch
-import app.sqzass.patches.shared.misc.proton.indexOfLastWrite
-import app.sqzass.patches.shared.misc.proton.injectColorTransformCall
-import app.sqzass.patches.shared.misc.proton.markFeaturePatched
-import app.sqzass.patches.shared.misc.proton.markPatchMetadata
-import app.sqzass.patches.shared.misc.proton.transformCoreDarkBackgrounds
-import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 
 private const val SPLASH_STYLE = "ProtonTheme.Splash.Vpn.DarkPreferred"
 private const val SPLASH_BACKGROUND_ITEM = "windowSplashScreenBackground"
