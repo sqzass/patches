@@ -8,7 +8,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patcher.util.matchSingle
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 import app.sqzass.patches.shared.misc.proton.AMOLED_THEME_CLASS
@@ -18,16 +17,13 @@ import app.sqzass.patches.shared.misc.proton.injectColorTransformCall
 import app.sqzass.patches.shared.misc.proton.markFeaturePatched
 import app.sqzass.patches.shared.misc.proton.markPatchMetadata
 import app.sqzass.patches.shared.misc.proton.transformCoreDarkBackgrounds
-import app.morphe.util.adoptChild
-import app.morphe.util.findElementByAttributeValue
-import app.morphe.util.findElementByAttributeValueOrThrow
-import app.morphe.util.getNode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 
 private const val SPLASH_STYLE = "ProtonTheme.Splash.Vpn.DarkPreferred"
 private const val SPLASH_BACKGROUND_ITEM = "windowSplashScreenBackground"
 private const val SPLASH_BACKGROUND_COLOR = "hx_splash_background"
 private const val SPLASH_BACKGROUND_COLOR_V31 = "hx_splash_background_v31"
+
 private val SPLASH_BACKGROUND_VALUES = mapOf(
     SPLASH_BACKGROUND_COLOR to mapOf(
         "res/values/colors.xml" to "@color/baltic_sea",
@@ -38,6 +34,7 @@ private val SPLASH_BACKGROUND_VALUES = mapOf(
         "res/values-night/colors.xml" to "@android:color/black",
     ),
 )
+
 private val SPLASH_STYLE_BACKGROUNDS = mapOf(
     "res/values/styles.xml" to SPLASH_BACKGROUND_COLOR,
     "res/values-v31/styles.xml" to SPLASH_BACKGROUND_COLOR_V31,
@@ -47,26 +44,29 @@ private val amoledSplashBackgroundPatch = resourcePatch {
     execute {
         SPLASH_BACKGROUND_VALUES.forEach { (color, values) ->
             values.forEach { (file, value) ->
-                document(file).use { document ->
-                    document.getNode("resources").adoptChild("color") {
+                resourceXml(file, copy = false).use { document ->
+                    document.root.appendChild("color") {
                         setAttribute("name", color)
-                        textContent = value
+                        text = value
                     }
                 }
             }
         }
 
         SPLASH_STYLE_BACKGROUNDS.forEach { (file, color) ->
-            document(file).use { document ->
-                val style = document.getElementsByTagName("style").findElementByAttributeValueOrThrow("name", SPLASH_STYLE)
+            resourceXml(file).use { document ->
+                val style = document.root.children.firstOrNull { it.tagName == "style" && it.getAttribute("name") == SPLASH_STYLE }
+                    ?: throw IllegalStateException("Style $SPLASH_STYLE not found in $file")
+                
                 val background = "@color/$color"
-                val item = style.getElementsByTagName("item").findElementByAttributeValue("name", SPLASH_BACKGROUND_ITEM)
+                val item = style.children.firstOrNull { it.tagName == "item" && it.getAttribute("name") == SPLASH_BACKGROUND_ITEM }
+                
                 if (item != null) {
-                    item.textContent = background
+                    item.text = background
                 } else {
-                    style.adoptChild("item") {
+                    style.appendChild("item") {
                         setAttribute("name", SPLASH_BACKGROUND_ITEM)
-                        textContent = background
+                        text = background
                     }
                 }
             }

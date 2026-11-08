@@ -47,6 +47,7 @@ tasks.withType<Checkstyle>().configureEach {
 dependencies {
     checkstyle(libs.spring.javaformat.checkstyle)
     implementation(libs.morphe.extensions)
+    implementation(libs.morphe.patches.library)
     compileOnly(libs.okhttp)
     compileOnly(libs.androidx.annotation)
     compileOnly(libs.androidx.compose.ui)

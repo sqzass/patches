@@ -44,8 +44,12 @@ private fun MutableClass.compileMethod(
         throw PatchException("Try-catch blocks in raw smali strings are not supported by this helper. Use the dexlib2 API directly.")
     }
     
-    val implementation = ImmutableMethodImplementation(registers).apply {
-        addInstructionsWithLabels(this, 0, smali)
+    val implementation = if (hasTryBlocks) {
+        assembleImplementation(name, parameters, returnType, accessFlags, registers, smali)
+    } else {
+        MutableMethodImplementation(registers).apply {
+            addInstructionsWithLabels(0, smali)
+        }
     }
 
     return ImmutableMethod(

@@ -1,11 +1,11 @@
 /* Copyright (C) 2026 sqzass
  * SPDX-License-Identifier: GPL-3.0-only
  */
-
 package app.sqzass.patches.protonvpn.misc.restrictions
 
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.mutableClassDefBy
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 
@@ -18,17 +18,12 @@ val disableForcedUpdatePatch: BytecodePatch = bytecodePatch(
     dependsOn(patchesSettingsPatch)
 
     execute {
-        // Force update is controlled by the ForceUpdateActivity and related checks
-        // Look for methods that check app version or force update flag
-        val clazz = findClass("Lme/proton/core/presentation/ui/alert/ForceUpdateActivity;")
-        val updateMethod = clazz.findMethod("shouldForceUpdate", "()Z")
-            ?: findMethodInClazz(clazz, "checkUpdate", "()Z")
+        val clazz = mutableClassDefBy("Lme/proton/core/presentation/ui/alert/ForceUpdateActivity;")
+        val method = clazz.methods.firstOrNull { it.name == "shouldForceUpdate" || it.name == "checkUpdate" }
             ?: throw IllegalStateException("Force update method not found")
-        updateMethod.clearBody()
-        updateMethod.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
+        
+        // Clear the existing body and replace it with a simple "return false"
+        method.implementation = null
+        method.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
     }
-}
-
-private fun findMethodInClazz(clazz: any, name: String, paramDesc: String): any {
-    return clazz.methods.singleOrNull { it.name == name && it.parameterTypes.size == 1 } ?: throw IllegalStateException("Method not found")
 }
