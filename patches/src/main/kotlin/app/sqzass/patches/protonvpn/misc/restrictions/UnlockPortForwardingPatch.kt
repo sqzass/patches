@@ -19,10 +19,9 @@ val unlockPortForwardingPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // Port Forwarding is controlled by isPortForwardingEnabled() in ConnectionPreferences
-        val clazz = findClass("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
-        val method = clazz.findMethod("isPortForwardingEnabled", "()Z")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
+        val method = clazz.methods.singleOrNull { it.name == "isPortForwardingEnabled" && it.parameterTypes.size == 0 }
             ?: throw IllegalStateException("isPortForwardingEnabled not found")
-        method.clearBody()
-        method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        method.returnEarly(0)
     }
 }

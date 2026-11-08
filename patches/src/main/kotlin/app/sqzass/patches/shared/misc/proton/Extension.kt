@@ -4,7 +4,6 @@
  */
 package app.sqzass.patches.shared.misc.proton
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
@@ -29,7 +28,7 @@ private const val APPLIED_PATCHES_CLASS = "${PROTON_EXTENSION_PACKAGE}AppliedPat
 internal fun BytecodePatchContext.attachPatchContext(applicationClass: String) =
     mutableClassDefBy(applicationClass).methods
         .single { it.name == "onCreate" && it.parameterTypes.isEmpty() && it.returnType == "V" }
-        .addInstruction(
+        .addInstructionsWithLabels(
             0,
             "invoke-static/range { p0 .. p0 }, $PATCH_CONTEXT_CLASS->attach(Landroid/app/Application;)V",
         )

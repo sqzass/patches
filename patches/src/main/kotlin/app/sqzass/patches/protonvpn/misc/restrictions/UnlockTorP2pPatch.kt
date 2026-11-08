@@ -6,6 +6,7 @@ package app.sqzass.patches.protonvpn.misc.restrictions
 
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 
@@ -19,16 +20,14 @@ val unlockTorP2pPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // Tor over VPN is controlled by isTorEnabled() in ConnectionPreferences
-        val clazz = findClass("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
-        val method = clazz.findMethod("isTorEnabled", "()Z")
+        val clazz = classDefBy("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
+        val method = clazz.methods.singleOrNull { it.name == "isTorEnabled" && it.parameterTypes.size == 0 }
             ?: throw IllegalStateException("isTorEnabled not found")
-        method.clearBody()
-        method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        method.returnEarly(0)
         
         // P2P is controlled by isP2PEnabled() in ConnectionPreferences
-        val p2pMethod = clazz.findMethod("isP2PEnabled", "()Z")
+        val p2pMethod = clazz.methods.singleOrNull { it.name == "isP2PEnabled" && it.parameterTypes.size == 0 }
             ?: throw IllegalStateException("isP2PEnabled not found")
-        p2pMethod.clearBody()
-        p2pMethod.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        p2pMethod.returnEarly(0)
     }
 }

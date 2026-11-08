@@ -23,7 +23,7 @@ internal fun MutableMethod.filterReturnValue(filter: String) {
     findInstructionIndicesReversedOrThrow(Opcode.RETURN_OBJECT).forEach { index ->
         val register = getInstruction<OneRegisterInstruction>(index).registerA
         replaceInstruction(index, "invoke-static/range { v$register .. v$register }, $filter")
-        addInstructions(
+        addInstructionsWithLabels(
             index + 1,
             """
                 move-result-object v$register
@@ -64,7 +64,7 @@ internal fun BytecodePatchContext.filterConstructorProperty(toString: Fingerprin
             check-cast $parameter, ${field.type}
         """
     }
-    constructor.addInstructions(
+    constructor.addInstructionsWithLabels(
         0,
         """
             invoke-static/range { $parameter .. $parameter }, $filter
@@ -76,5 +76,5 @@ internal fun BytecodePatchContext.filterConstructorProperty(toString: Fingerprin
 internal fun BytecodePatchContext.clearConstructorProperty(toString: Fingerprint, property: String) {
     val (constructor, field) = propertyConstructor(toString, property)
     if (field.type != "Z") throw PatchException("$field is not a boolean")
-    constructor.addInstructions(0, "const/16 ${constructor.parameterAssignedTo(field)}, 0x0")
+    constructor.addInstructionsWithLabels(0, "const/16 ${constructor.parameterAssignedTo(field)}, 0x0")
 }

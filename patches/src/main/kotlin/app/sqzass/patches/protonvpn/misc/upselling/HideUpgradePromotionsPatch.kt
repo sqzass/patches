@@ -4,8 +4,6 @@
  */
 package app.sqzass.patches.protonvpn.misc.upselling
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.BytecodePatch
@@ -127,7 +125,7 @@ val hideUpgradePromotionsPatch: BytecodePatch = bytecodePatch(
         (FreeConnectionsUpsellBannerFingerprint.matchOrNull() ?: InlinedFreeConnectionsUpsellBannerFingerprint.matchSingle()).run {
             val bannerRoot = instructionMatches.last()
             val register = bannerRoot.getInstruction<OneRegisterInstruction>().registerA
-            method.addInstruction(
+            method.addInstructionsWithLabels(
                 bannerRoot.index + 1,
                 "invoke-static { v$register }, $PROMOTIONS_CLASS->hideUpgradeView(Landroid/view/View;)V",
             )
@@ -136,7 +134,7 @@ val hideUpgradePromotionsPatch: BytecodePatch = bytecodePatch(
         upgradeCarouselFingerprint().matchSingle().run {
             val freeUserResult = instructionMatches[1]
             val register = freeUserResult.getInstruction<OneRegisterInstruction>().registerA
-            method.addInstructions(
+            method.addInstructionsWithLabels(
                 freeUserResult.index + 1,
                 """
                     invoke-static { v$register }, $PROMOTIONS_CLASS->showsUpsell(Z)Z

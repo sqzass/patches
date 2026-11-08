@@ -19,10 +19,9 @@ val unlockVpnAcceleratorPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // VPN Accelerator is controlled by isAcceleratorEnabled() in ConnectionPreferences
-        val clazz = findClass("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
-        val method = clazz.findMethod("isAcceleratorEnabled", "()Z")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
+        val method = clazz.methods.singleOrNull { it.name == "isAcceleratorEnabled" && it.parameterTypes.size == 0 }
             ?: throw IllegalStateException("isAcceleratorEnabled not found")
-        method.clearBody()
-        method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        method.returnEarly(0)
     }
 }

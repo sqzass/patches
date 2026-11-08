@@ -24,7 +24,7 @@ internal val switchColorsPatch = resourcePatch {
     execute {
         val declaredAttributes = document("res/values/attrs.xml").use { document ->
             document.getElementsByTagName("attr").asSequence()
-                .map { (it as Element).getAttribute("name") }
+                .map { element -> (element as Element).getAttribute("name") }
                 .toSet()
         }
 

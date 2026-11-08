@@ -11,7 +11,7 @@
  */
 package app.sqzass.patches.protonvpn.misc.freeservers
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatch
@@ -59,7 +59,7 @@ val showFreeServerLocationsPatch: BytecodePatch = bytecodePatch(
             )
             val itemRegister = parameterRegister(tierIndex - 1)
             val tierRegister = parameterRegister(tierIndex)
-            addInstructions(
+            addInstructionsWithLabels(
                 0,
                 """
                     invoke-static { $itemRegister, $tierRegister }, $FREE_SERVER_LOCATIONS->tierForAvailabilityCheck(Ljava/lang/Object;Ljava/lang/Integer;)Ljava/lang/Integer;
@@ -88,7 +88,7 @@ val showFreeServerLocationsPatch: BytecodePatch = bytecodePatch(
             )
         }
 
-        searchResultSectionFingerprint().matchSingle().method.addInstructions(
+        searchResultSectionFingerprint().matchSingle().method.addInstructionsWithLabels(
             0,
             """
                 invoke-static { p2, p4 }, $FREE_SERVER_LOCATIONS->itemsVisibleToTier(Ljava/util/List;Ljava/lang/Integer;)Ljava/util/List;

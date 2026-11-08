@@ -20,6 +20,7 @@ dependencies {
     compileOnly(libs.gson)
     patchListGeneratorClasspath(libs.gson)
     testImplementation(kotlin("test"))
+    implementation(libs.morphe.patcher)
 }
 
 tasks {

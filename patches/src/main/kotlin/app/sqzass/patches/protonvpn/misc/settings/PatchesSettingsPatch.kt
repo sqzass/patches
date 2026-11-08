@@ -4,7 +4,7 @@
  */
 package app.sqzass.patches.protonvpn.misc.settings
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
@@ -48,7 +48,7 @@ private fun BytecodePatchContext.addPatchesSettingsRow() {
 
     val row = match.method.getInstruction<RegisterRangeInstruction>(rowIndex)
     val composer = row.startRegister + COMPOSER_PARAMETER
-    match.method.addInstructions(rowIndex + 1, "invoke-static/range { v$composer .. v$composer }, $settingsRowMethod")
+    match.method.addInstructionsWithLabels(rowIndex + 1, "invoke-static/range { v$composer .. v$composer }, $settingsRowMethod")
 }
 
 internal val patchesSettingsPatch = bytecodePatch {

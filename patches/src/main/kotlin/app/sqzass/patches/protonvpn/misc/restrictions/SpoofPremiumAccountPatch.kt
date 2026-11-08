@@ -19,13 +19,12 @@ val spoofPremiumAccountPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // Spoof the account tier check - find the method that checks if user is premium
-        val clazz = findClass("Lcom/protonvpn/android/settings/data/LocalUserSettings;")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/settings/data/LocalUserSettings;")
         // Check for isPremium() or similar method
-        val premiumMethod = clazz.findMethod("isPremium", "()Z")
+        val premiumMethod = clazz.methods.singleOrNull { it.name == "isPremium" && it.parameterTypes.size == 0 }
             ?: findMethodInClazz(clazz, "isPlus", "()Z")
             ?: throw IllegalStateException("Premium check method not found")
-        premiumMethod.clearBody()
-        premiumMethod.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+        premiumMethod.returnEarly(0)
     }
 }
 

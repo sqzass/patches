@@ -6,14 +6,12 @@ package app.sqzass.patches.shared.misc.proton
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.Match
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.literal
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.indexOfFirstLiteralInstructionOrThrow
@@ -79,7 +77,7 @@ internal fun MutableMethod.paletteFieldAssignedFrom(literal: Long): FieldReferen
 
 private fun MutableMethod.transformShade(constructorCall: Match.InstructionMatch, argument: Int, transform: String) {
     val shade = constructorCall.getInstruction<RegisterRangeInstruction>().shadeRegister(argument)
-    addInstructions(
+    addInstructionsWithLabels(
         constructorCall.index,
         """
             invoke-static/range { v$shade .. v${shade + 1} }, $AMOLED_THEME_CLASS->$transform(J)J

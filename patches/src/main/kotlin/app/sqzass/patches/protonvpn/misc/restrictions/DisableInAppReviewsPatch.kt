@@ -19,12 +19,11 @@ val disableInAppReviewsPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // In-app reviews are triggered by review prompts - intercept the method that shows them
-        val clazz = mutableClassDefBy("Lcom/protonvpn/android/redesign/app/ui/review/ReviewPromptHandler;")
-        val showMethod = clazz.findMethod("showReviewPrompt", "()V")
+        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/redesign/app/ui/review/ReviewPromptHandler;")
+        val showMethod = clazz.methods.singleOrNull { it.name == "showReviewPrompt" && it.parameterTypes.size == 0 }
             ?: findMethodInClazz(clazz, "requestReview", "()V")
             ?: throw IllegalStateException("Review prompt method not found")
-        showMethod.clearBody()
-        showMethod.addInstructions(0, "return-void")
+        showMethod.returnEarly(0)
     }
 }
 
