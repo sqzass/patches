@@ -12,12 +12,12 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.formatter.DexFormatter
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
-import com.android.tools.smali.dexlib2.immutable.ImmutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 internal fun descriptor(method: MethodReference): String = DexFormatter.INSTANCE.getMethodDescriptor(method)
@@ -37,7 +37,7 @@ private fun MutableClass.compileMethod(
     if (".catch" in smali) {
         throw PatchException("Try-catch blocks in raw smali strings are not supported. Use dexlib2 API directly.")
     }
-    val implementation = ImmutableMethodImplementation(registers).apply {
+    val implementation = MutableMethodImplementation(registers).apply {
         addInstructionsWithLabels(0, smali)
     }
     return ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation).toMutable()
