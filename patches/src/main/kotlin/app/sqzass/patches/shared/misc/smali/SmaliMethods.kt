@@ -21,9 +21,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 internal fun descriptor(method: MethodReference): String = DexFormatter.INSTANCE.getMethodDescriptor(method)
-
 internal fun descriptor(field: FieldReference): String = DexFormatter.INSTANCE.getFieldDescriptor(field)
-
 internal fun String.toJavaClassName() = removePrefix("L").removeSuffix(";").replace('/', '.')
 
 internal fun Method.parameterRegister(index: Int): String {
@@ -33,58 +31,23 @@ internal fun Method.parameterRegister(index: Int): String {
 }
 
 private fun MutableClass.compileMethod(
-    name: String,
-    parameters: List<ImmutableMethodParameter>,
-    returnType: String,
-    accessFlags: Int,
-    registers: Int,
-    smali: String,
+    name: String, parameters: List<ImmutableMethodParameter>, returnType: String,
+    accessFlags: Int, registers: Int, smali: String,
 ): MutableMethod {
     if (".catch" in smali) {
-        throw PatchException("Try-catch blocks in raw smali strings are not supported by this helper. Use the dexlib2 API directly.")
+        throw PatchException("Try-catch blocks in raw smali strings are not supported. Use dexlib2 API directly.")
     }
-    
     val implementation = ImmutableMethodImplementation(registers).apply {
         addInstructionsWithLabels(0, smali)
     }
-
-    return ImmutableMethod(
-        type,
-        name,
-        parameters,
-        returnType,
-        accessFlags,
-        null,
-        null,
-        implementation,
-    ).toMutable()
+    return ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation).toMutable()
 }
 
-internal fun MutableClass.addMethod(
-    name: String,
-    parameters: List<String>,
-    returnType: String,
-    accessFlags: Int,
-    registers: Int,
-    smali: String,
-): MutableMethod = compileMethod(
-    name,
-    parameters.map { ImmutableMethodParameter(it, null, null) },
-    returnType,
-    accessFlags,
-    registers,
-    smali,
-).also(methods::add)
+internal fun MutableClass.addMethod(name: String, parameters: List<String>, returnType: String, accessFlags: Int, registers: Int, smali: String): MutableMethod = 
+    compileMethod(name, parameters.map { ImmutableMethodParameter(it, null, null) }, returnType, accessFlags, registers, smali).also(methods::add)
 
-internal fun MutableClass.addStaticMethod(
-    name: String,
-    parameters: List<String>,
-    returnType: String,
-    registers: Int,
-    smali: String,
-): String = descriptor(
-    addMethod(name, parameters, returnType, AccessFlags.PUBLIC.value or AccessFlags.STATIC.value, registers, smali),
-)
+internal fun MutableClass.addStaticMethod(name: String, parameters: List<String>, returnType: String, registers: Int, smali: String): String = 
+    descriptor(addMethod(name, parameters, returnType, AccessFlags.PUBLIC.value or AccessFlags.STATIC.value, registers, smali))
 
 internal fun MutableClass.replaceStub(name: String, registers: Int, smali: String) {
     val stub = methods.single { it.name == name }
@@ -99,58 +62,20 @@ internal fun MutableClass.addFieldReader(field: FieldReference): String {
         field.type.startsWith("L") || field.type.startsWith("[") -> "iget-object" to "return-object"
         else -> throw PatchException("${descriptor(field)} has type ${field.type}, expected Z, I, an object or an array")
     }
-    return descriptor(
-        addMethod(
-            "hxRead${field.name.replaceFirstChar(Char::uppercaseChar)}",
-            emptyList(),
-            field.type,
-            AccessFlags.PUBLIC.value,
-            2,
-            """
-                $read v0, p0, ${descriptor(field)}
-                $returnInstruction v0
-            """,
-        ),
-    )
+    return descriptor(addMethod("hxRead${field.name.replaceFirstChar(Char::uppercaseChar)}", emptyList(), field.type, AccessFlags.PUBLIC.value, 2, "$read v0, p0, ${descriptor(field)}\n$returnInstruction v0"))
 }
 
-internal fun MutableClass.replaceResourceIdStubs(type: ResourceType, stubs: Map<String, String>) =
-    stubs.forEach { (stub, resourceName) ->
-        replaceStub(
-            stub,
-            1,
-            """
-                const v0, ${resourceId(type, resourceName)}
-                return v0
-            """,
-        )
-    }
+internal fun MutableClass.replaceResourceIdStubs(type: ResourceType, stubs: Map<String, String>) = stubs.forEach { (stub, resourceName) ->
+    replaceStub(stub, 1, "const v0, ${resourceId(type, resourceName)}\nreturn v0")
+}
 
 internal fun MutableClass.replaceMethod(name: String, registers: Int, smali: String) {
     val original = methods.single { it.name == name }
     methods.remove(original)
-    methods.add(
-        compileMethod(
-            name,
-            original.parameters.map { ImmutableMethodParameter.of(it) },
-            original.returnType,
-            original.accessFlags,
-            registers,
-            smali,
-        ),
-    )
+    methods.add(compileMethod(name, original.parameters.map { ImmutableMethodParameter.of(it) }, original.returnType, original.accessFlags, registers, smali))
 }
 
 internal fun MutableClass.addDefaultConstructor() {
     if (methods.any { it.name == "<init>" && it.parameterTypes.isEmpty() }) return
-    methods.add(
-        compileMethod(
-            "<init>",
-            emptyList(),
-            "V",
-            AccessFlags.PUBLIC.value or AccessFlags.CONSTRUCTOR.value,
-            1,
-            "invoke-direct {p0}, Ljava/lang/Object;-><init>()V\nreturn-void",
-        ),
-    )
+    methods.add(compileMethod("<init>", emptyList(), "V", AccessFlags.PUBLIC.value or AccessFlags.CONSTRUCTOR.value, 1, "invoke-direct {p0}, Ljava/lang/Object;-><init>()V\nreturn-void"))
 }
