@@ -47,7 +47,24 @@ private fun MutableClass.compileMethod(
     val implementation = if (hasTryBlocks) {
         assembleImplementation(name, parameters, returnType, accessFlags, registers, smali)
     } else {
-        MutableMethodImplementation(registers)
+        MutableMethodImplementation(registers).apply {
+            addInstructionsWithLabels(0, smali)
+        }
+    }
+
+    return ImmutableMethod(
+        type,
+        name,
+        parameters,
+        returnType,
+        accessFlags,
+        null,
+        null,
+        implementation,
+    ).toMutable().apply {
+        if (!hasTryBlocks) addInstructionsWithLabels(0, smali)
+    }
+}
 private fun MutableClass.assembleImplementation(
     name: String,
     parameters: List<ImmutableMethodParameter>,

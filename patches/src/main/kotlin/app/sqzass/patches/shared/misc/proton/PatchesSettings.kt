@@ -89,6 +89,14 @@ internal fun patchesSettingsActivityPatch(themeStyle: String, hostActivity: Stri
             .apply {
                 val index = indexOfFirstInstructionOrThrow {
                     opcode == Opcode.INVOKE_VIRTUAL &&
+                        getReference<MethodReference>()?.name == "startActivity"
+                }
+                replaceInstruction(
+                    index,
+                    "invoke-virtual { p0, p1 }, $PATCHES_COMPONENT_FACTORY_CLASS->startActivity(Landroid/app/Activity;Landroid/content/Intent;)Landroid/content/Intent;",
+                )
+            }
+    }
     private fun BytecodePatchContext.replacePatchesThemeStubs() {
         with(mutableClassDefBy(PATCHES_THEME_CLASS)) {
             replaceResourceIdStubs(

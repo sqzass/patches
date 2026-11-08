@@ -121,6 +121,7 @@ gradle-app.setting
 
 # Local API docs cached from morphe-patcher (not part of the repo)
 .local-docs/
+PDocs
 
 # Dependency directories
 node_modules/

@@ -140,13 +140,9 @@ public final class AccentColor {
     }
 
     private static final class LabAdjustment {
-
         final double hueRadians;
-
         final double chromaScale;
-
         final double lightnessScale;
-
         final double stockChroma;
 
         LabAdjustment(double hueRadians, double chromaScale, double lightnessScale, double stockChroma) {
@@ -155,27 +151,18 @@ public final class AccentColor {
             this.lightnessScale = lightnessScale;
             this.stockChroma = stockChroma;
         }
-
-
+    }
 
     private static final double MAX_CHROMA_SCALE = 2.5;
-
     private static final double MIN_PRESET_CHROMA = 1;
-
     private static final double MIN_LIGHTNESS_SCALE = 0.6;
-
     private static final double MAX_LIGHTNESS_SCALE = 1.4;
-
     private static final float MAX_LIGHTNESS = 100;
-
     private static final double GAMUT_TOLERANCE = 2;
-
     private static final int GAMUT_STEPS = 10;
-
     private static final Map<Integer, Integer> TRANSFORMED_BRAND_COLORS = new ConcurrentHashMap<>();
 
     private AccentColor() {
-
     }
 
     public static boolean isPatched() {
