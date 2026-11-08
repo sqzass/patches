@@ -237,3 +237,4 @@ public final class PatchesTheme {
     private static int weightedRgbBrightness(int color) {
         return (((color >> 16) & 0xFF) * 299 + ((color >> 8) & 0xFF) * 587 + (color & 0xFF) * 114) / 1000;
     }
+}
