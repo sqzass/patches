@@ -22,7 +22,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchSingle
 import app.sqzass.patches.protonvpn.misc.anchors.vpnUserType
-import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.patcher.util.indexOfFirstInstructionOrThrow
 private const val LOCAL_USER_SETTINGS = "Lcom/protonvpn/android/settings/data/LocalUserSettings;"
 
 import com.android.tools.smali.dexlib2.Opcode

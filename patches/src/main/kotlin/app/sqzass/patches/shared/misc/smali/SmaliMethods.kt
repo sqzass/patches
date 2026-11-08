@@ -4,6 +4,7 @@
  */
 package app.sqzass.patches.shared.misc.smali
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.resource.ResourceType
