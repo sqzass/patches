@@ -6,6 +6,10 @@ package app.sqzass.patches.protonvpn.misc.restrictions
 
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.returnEarly
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 
@@ -19,9 +23,9 @@ val unlockVpnAcceleratorPatch: BytecodePatch = bytecodePatch(
 
     execute {
         // VPN Accelerator is controlled by isAcceleratorEnabled() in ConnectionPreferences
-        val clazz = app.morphe.patcher.patch.classDefBy("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
-        val method = clazz.methods.singleOrNull { it.name == "isAcceleratorEnabled" && it.parameterTypes.size == 0 }
+        val clazz = mutableClassDefBy("Lcom/protonvpn/android/connectionpreferences/ConnectionPreferences;")
+        val method = clazz.methods.singleOrNull { it.name == "isAcceleratorEnabled" && it.parameterTypes.isEmpty() }
             ?: throw IllegalStateException("isAcceleratorEnabled not found")
-        method.returnEarly(0)
+        method.returnEarly(true)
     }
 }

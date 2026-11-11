@@ -6,6 +6,7 @@ package app.sqzass.patches.shared.misc.proton
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.Match
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.literal
@@ -14,7 +15,8 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.indexOfFirstLiteralInstructionOrThrow
+import app.sqzass.patches.shared.getReference
+import app.sqzass.patches.shared.indexOfFirstLiteralInstructionOrThrow
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction

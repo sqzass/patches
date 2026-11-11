@@ -7,7 +7,7 @@ package app.sqzass.patches.shared.misc.proton
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.util.asSequence
+import app.sqzass.patches.shared.asSequence
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 

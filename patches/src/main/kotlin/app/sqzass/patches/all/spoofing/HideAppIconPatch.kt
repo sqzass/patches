@@ -1,6 +1,5 @@
 package app.sqzass.patches.all.spoofing
 
-import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.resourcePatch
 import app.sqzass.patches.shared.collectDescendants
 import app.sqzass.patches.shared.collectElements
@@ -19,19 +18,7 @@ val hideAppIconPatch = resourcePatch(
 ) {
     category("Interface")
 
-    val removeLauncherFiltersOption = booleanOption(
-        key = "removeLauncherFilters",
-        default = true,
-        title = "Remove Launcher Entry",
-        description = "Strip intent filters that combine android.intent.action.MAIN with the LAUNCHER category.",
-    )
-
     execute {
-        if (removeLauncherFiltersOption.value != true) {
-            logger.info("Launcher filter removal disabled.")
-            return@execute
-        }
-
         document("AndroidManifest.xml").use { document ->
             // Only the intent-filter is removed, never the activity itself:
             // the component keeps working and stays reachable from app info,

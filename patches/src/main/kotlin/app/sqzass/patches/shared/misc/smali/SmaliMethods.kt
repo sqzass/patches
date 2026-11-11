@@ -38,10 +38,10 @@ private fun MutableClass.compileMethod(
     if (".catch" in smali) {
         throw PatchException("Try-catch blocks in raw smali strings are not supported. Use dexlib2 API directly.")
     }
-    val implementation = MutableMethodImplementation(registers).apply {
-        addInstructions(0, smali)
-    }
-    return ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation).toMutable()
+    val implementation = MutableMethodImplementation(registers)
+    val method = ImmutableMethod(type, name, parameters, returnType, accessFlags, null, null, implementation).toMutable()
+    method.addInstructions(0, smali)
+    return method
 }
 
 internal fun MutableClass.addMethod(name: String, parameters: List<String>, returnType: String, accessFlags: Int, registers: Int, smali: String): MutableMethod = 

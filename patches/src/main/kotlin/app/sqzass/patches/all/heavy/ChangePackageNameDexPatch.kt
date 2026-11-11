@@ -63,8 +63,11 @@ val changePackageNameDexPatch = bytecodePatch(
 
     execute {
         val oldPackage = oldPackageOption.value?.takeIf { it.isNotBlank() } ?: packageMetadata.packageName
-        val rawNew = newPackageOption.value?.takeIf { it.isNotBlank() }
-            ?: dexNewPackageOption.value?.takeIf { it.isNotBlank() }
+        // Prefer this patch's own package-name option so the dex rewrite stays in sync
+        // with whatever the user configured here. Fall back to the manifest patch's option
+        // only when both are applied together (dependsOn), so a rename actually reaches dex.
+        val rawNew = dexNewPackageOption.value?.takeIf { it.isNotBlank() }
+            ?: newPackageOption.value?.takeIf { it.isNotBlank() }
         val newPackage = resolveNewPackageName(rawNew, oldPackage)
         if (rewriteDexStringsOption.value != true && hookPackageNameOption.value != true) {
             logger.info("Dex rewrite and getPackageName hook are off.")
