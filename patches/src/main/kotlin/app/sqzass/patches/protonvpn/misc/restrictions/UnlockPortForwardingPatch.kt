@@ -6,7 +6,6 @@ package app.sqzass.patches.protonvpn.misc.restrictions
 
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.returnEarly
