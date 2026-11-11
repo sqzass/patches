@@ -12,9 +12,9 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
-import app.sqzass.patches.shared.misc.fillAppliedPatch
-import app.sqzass.patches.shared.misc.fillPatchMetadata
-import app.sqzass.patches.shared.misc.returnTrueFrom
+import app.morphe.patches.shared.misc.fillAppliedPatch
+import app.morphe.patches.shared.misc.fillPatchMetadata
+import app.morphe.patches.shared.misc.returnTrueFrom
 
 internal const val PROTON_EXTENSION_PACKAGE = "Lapp/sqzass/extension/proton/"
 internal const val ACCENT_COLOR_CLASS = "${PROTON_EXTENSION_PACKAGE}AccentColor;"

@@ -6,6 +6,7 @@ package app.sqzass.patches.protonvpn.misc.theme
 
 import app.morphe.patcher.patch.BytecodePatch
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
 import app.sqzass.patches.shared.misc.proton.AMOLED_THEME_CLASS

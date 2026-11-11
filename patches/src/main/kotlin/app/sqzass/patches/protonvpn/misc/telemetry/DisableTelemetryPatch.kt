@@ -18,7 +18,7 @@ import app.sqzass.patches.protonvpn.misc.anchors.resourceFieldsPatch
 import app.sqzass.patches.protonvpn.misc.anchors.unitInstanceField
 import app.sqzass.patches.protonvpn.misc.settings.patchesSettingsPatch
 import app.sqzass.patches.shared.compat.AppCompatibilities
-import app.sqzass.patches.shared.misc.analytics.disableAnalyticsCollectionPatch
+import app.morphe.patches.shared.misc.analytics.disableAnalyticsCollectionPatch
 import app.sqzass.patches.shared.misc.proton.markPatchApplied
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 

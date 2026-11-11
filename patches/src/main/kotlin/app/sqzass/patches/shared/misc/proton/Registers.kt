@@ -7,7 +7,7 @@ package app.sqzass.patches.shared.misc.proton
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.indexOfFirstInstructionReversed
+import app.sqzass.patches.shared.indexOfFirstInstructionReversed
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction
 

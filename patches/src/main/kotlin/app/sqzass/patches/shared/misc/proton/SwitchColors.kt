@@ -1,11 +1,7 @@
-/*
- * Copyright (C) 2026 sqzass
- * SPDX-License-Identifier: GPL-3.0-only
- */
+/* Copyright (C) 2026 sqzass SPDX-License-Identifier: GPL-3.0-only */
 package app.sqzass.patches.shared.misc.proton
 
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.util.asSequence
 import org.w3c.dom.Element
 
 private const val SWITCH_COLORS_STYLE = "ThemeOverlay.Patches.MaterialSwitch"
@@ -22,23 +18,23 @@ private val SWITCH_COLOR_ROLES = mapOf(
 
 internal val switchColorsPatch = resourcePatch {
     execute {
-        val declaredAttributes = document("res/values/attrs.xml").use { document ->
-            document.getElementsByTagName("attr").asSequence()
-                .map { element -> (element as Element).getAttribute("name") }
-                .toSet()
+        val doc = document("res/values/attrs.xml")
+        val declaredAttributes = mutableSetOf<String>()
+        for (i in 0 until doc.getElementsByTagName("attr").length) {
+            val element = doc.getElementsByTagName("attr").item(i) as Element
+            declaredAttributes.add(element.getAttribute("name"))
         }
-
-        document("res/values/styles.xml").use { document ->
-            val style = document.createElement("style")
-            style.setAttribute("name", SWITCH_COLORS_STYLE)
-            style.setAttribute("parent", "")
+        val style = document("res/values/styles.xml").use { document ->
+            val s = document.createElement("style")
+            s.setAttribute("name", SWITCH_COLORS_STYLE)
+            s.setAttribute("parent", "")
             SWITCH_COLOR_ROLES.filterKeys { it in declaredAttributes }.forEach { (role, color) ->
                 val item = document.createElement("item")
                 item.setAttribute("name", role)
                 item.textContent = color
-                style.appendChild(item)
+                s.appendChild(item)
             }
-            document.documentElement.appendChild(style)
+            document.documentElement.appendChild(s)
         }
     }
 }

@@ -48,8 +48,14 @@ private const val APP_COMPAT_MODE_NIGHT_YES = 2
 internal object CoreNightModeFingerprint : Fingerprint(
     filters = listOf(
         anyInstruction(
-            fieldAccess(opcode(Opcode.SGET), type = "I"),
-            methodCall(opcode(Opcode.INVOKE_STATIC), parameters = emptyList(), returnType = "I"),
+            fieldAccess(opcode = Opcode.SGET, type = "I"),
+            methodCall(
+                definingClass = null,
+                name = null,
+                parameters = emptyList(),
+                returnType = "I",
+                opcode = Opcode.INVOKE_STATIC,
+            ),
         ),
         literal(APP_COMPAT_MODE_NIGHT_NO, location = MatchAfterWithin(2)),
         opcode(Opcode.IF_EQ, location = MatchAfterImmediately()),
@@ -127,14 +133,13 @@ internal fun patchesSettingsActivityPatch(themeStyle: String, hostActivity: Stri
     }
 
     internal fun BytecodePatchContext.injectBundleVersion() {
-        val bundleVersion = PatchesSettingsVersion::class.java
-            .getResourceAsStream(BUNDLE_VERSION_RESOURCE)?.bufferedReader()?.use {
-                it.readText().trim()
-            } ?: throw PatchException("Patch bundle version resource $BUNDLE_VERSION_RESOURCE is unavailable")
+    val bundleVersion = java.lang.ClassLoader.getSystemResourceAsStream(BUNDLE_VERSION_RESOURCE)?.bufferedReader()?.use {
+        it.readText().trim()
+    } ?: throw PatchException("Patch bundle version resource $BUNDLE_VERSION_RESOURCE is unavailable")
 
-        mutableClassDefBy(PATCHES_MENU_CLASS).methods.single { it.name == "bundleVersion" }
-            .returnEarly(bundleVersion)
-    }
+    mutableClassDefBy(PATCHES_MENU_CLASS).methods.single { it.name == "bundleVersion" }
+        .returnEarly(bundleVersion)
+}
 
     internal fun BytecodePatchContext.injectAppCompatDefaultNightMode() {
         val appCompatDelegate = AppCompatDelegateImplFingerprint.originalClassDef.superclass
