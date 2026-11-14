@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/sqzass/lustx-patches/compare/v1.14.0...v1.15.0) (2026-11-14)
+
+### ✨ New Features
+
+* add various new phone brands to spoof device patch ([f36c47e](https://github.com/sqzass/lustx-patches/commit/f36c47e5ebbbcbd0015a3a172bb53b3a3b09ec63))
+
 ## [1.14.0](https://github.com/sqzass/lustx-patches/compare/v1.13.1...v1.14.0) (2026-11-14)
 
 ### ✨ New Features
