@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-14T03:24:00",
-  "description": "## [1.13.0](https://github.com/sqzass/lustx-patches/compare/v1.12.0...v1.13.0) (2026-11-14)\n\n### ✨ New Features\n\n* add cleanup junk from all apps patch ([620525c](https://github.com/sqzass/lustx-patches/commit/620525ca1c15b8445df9203cf746622345747789))\n* add disable boot start permission patch ([ed11c0b](https://github.com/sqzass/lustx-patches/commit/ed11c0bb79e5a8b52425b6f8d848729321627e58))\n* add hide app icon from drawer/launcher patch ([ede7413](https://github.com/sqzass/lustx-patches/commit/ede74139c017a79083edbc104329914095d50c6d))\n* add remove sensitive permission patches ([4725a4e](https://github.com/sqzass/lustx-patches/commit/4725a4edd6cf58d7446a2e78f6915dbe039c8922))\n* add remove vpn checks patch ([a53d2e8](https://github.com/sqzass/lustx-patches/commit/a53d2e861d09fce7c887b38f1d4e069b0d23f9a6))\n* add spoof device patch with presets ([5f67e93](https://github.com/sqzass/lustx-patches/commit/5f67e937bc6405fc7085f6df187bf1da2bc753cd))\n* add spoof install source patch ([f687f4d](https://github.com/sqzass/lustx-patches/commit/f687f4d7c176e22eae672800918046c24f6b97c6))",
-  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.13.0/patches-1.13.0.mpp",
+  "created_at": "2026-11-14T03:34:05",
+  "description": "## [1.13.1](https://github.com/sqzass/lustx-patches/compare/v1.13.0...v1.13.1) (2026-11-14)\n\n### 🐛 Bug Fixes\n\n* change font patch to use proper var ([922594a](https://github.com/sqzass/lustx-patches/commit/922594a27b56b31aa853d797f2da2d652fc22768))\n* invisible \\r failures (crlf line endings) ([506678b](https://github.com/sqzass/lustx-patches/commit/506678b078df5d90df4012eac577f2dc84ef0458))",
+  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.13.1/patches-1.13.1.mpp",
   "signature_download_url": "",
-  "version": "1.13.0"
+  "version": "1.13.1"
 }

@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/sqzass/lustx-patches/compare/v1.13.0...v1.13.1) (2026-11-14)
+
+### 🐛 Bug Fixes
+
+* change font patch to use proper var ([922594a](https://github.com/sqzass/lustx-patches/commit/922594a27b56b31aa853d797f2da2d652fc22768))
+* invisible \r failures (crlf line endings) ([506678b](https://github.com/sqzass/lustx-patches/commit/506678b078df5d90df4012eac577f2dc84ef0458))
+
 ## [1.13.0](https://github.com/sqzass/lustx-patches/compare/v1.12.0...v1.13.0) (2026-11-14)
 
 ### ✨ New Features

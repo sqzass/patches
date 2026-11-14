@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "patches": [
     {
       "name": "Allow screen recording",
@@ -53,6 +53,28 @@
           "type": "kotlin.Boolean",
           "default": true,
           "values": null
+        }
+      ]
+    },
+    {
+      "name": "Custom font",
+      "description": "Overrides the app's typeface with a built-in font family. Affects explicit Typeface usage; views that never set a typeface keep the system default.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "fontFamily",
+          "title": "Font family",
+          "description": "The built-in font family to apply.",
+          "required": true,
+          "type": "kotlin.String",
+          "default": "monospace",
+          "values": {
+            "Monospace": "monospace",
+            "Serif": "serif",
+            "Sans-serif": "sans-serif"
+          }
         }
       ]
     },
