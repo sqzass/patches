@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-14T03:08:37",
-  "description": "## [1.11.0](https://github.com/sqzass/lustx-patches/compare/v1.10.2...v1.11.0) (2026-11-14)\n\n### ✨ New Features\n\n* add allow screenrecording patch ([c2eab05](https://github.com/sqzass/lustx-patches/commit/c2eab051495be0b52b39fc0dfeafd694c8ad04ae))\n* add allow screenshots patch ([255f066](https://github.com/sqzass/lustx-patches/commit/255f0668a1ad499cbed7ea0da11312efd3b00560))\n* add remove pairip patch ([61e9f46](https://github.com/sqzass/lustx-patches/commit/61e9f462dbc1b9d0b9bf359ddccd1e6fc75cca2e))",
-  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.11.0/patches-1.11.0.mpp",
+  "created_at": "2026-11-14T03:17:36",
+  "description": "## [1.12.0](https://github.com/sqzass/lustx-patches/compare/v1.11.0...v1.12.0) (2026-11-14)\n\n### ✨ New Features\n\n* add change font patch ([544a497](https://github.com/sqzass/lustx-patches/commit/544a49716dc1a5bed12a2c2e757632a449f1b3f1))\n* add change package name patch ([08871e3](https://github.com/sqzass/lustx-patches/commit/08871e3a4cb781e906af0422b7bf5be29ca58232))",
+  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.12.0/patches-1.12.0.mpp",
   "signature_download_url": "",
-  "version": "1.11.0"
+  "version": "1.12.0"
 }

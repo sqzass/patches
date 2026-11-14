@@ -1,3 +1,10 @@
+## [1.12.0](https://github.com/sqzass/lustx-patches/compare/v1.11.0...v1.12.0) (2026-11-14)
+
+### ✨ New Features
+
+* add change font patch ([544a497](https://github.com/sqzass/lustx-patches/commit/544a49716dc1a5bed12a2c2e757632a449f1b3f1))
+* add change package name patch ([08871e3](https://github.com/sqzass/lustx-patches/commit/08871e3a4cb781e906af0422b7bf5be29ca58232))
+
 ## [1.11.0](https://github.com/sqzass/lustx-patches/compare/v1.10.2...v1.11.0) (2026-11-14)
 
 ### ✨ New Features

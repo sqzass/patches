@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "patches": [
     {
       "name": "Allow screen recording",
@@ -17,6 +17,44 @@
       "category": null,
       "compatiblePackages": null,
       "options": []
+    },
+    {
+      "name": "Change package name",
+      "description": "Renames the app package (appends \".lustx\" by default) and updates custom permissions and content-provider authorities. Changing the package name can break apps that hardcode their package or authorities in code.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "packageName",
+          "title": "Package name",
+          "description": "New package name. \"Default\" appends \".lustx\" to the original.",
+          "required": true,
+          "type": "kotlin.String",
+          "default": "Default",
+          "values": {
+            "Default": "Default"
+          }
+        },
+        {
+          "key": "updatePermissions",
+          "title": "Update permissions",
+          "description": "Rename custom permissions (incl. the dynamic-receiver permission) that use the old package.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "updateProviders",
+          "title": "Update provider authorities",
+          "description": "Rename content-provider authorities that use the old package.",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Remove PairIP",
