@@ -1,3 +1,11 @@
+## [1.10.1](https://github.com/sqzass/lustx-patches/compare/v1.10.0...v1.10.1) (2026-11-14)
+
+### 🐛 Bug Fixes
+
+* ci ([575b8ec](https://github.com/sqzass/lustx-patches/commit/575b8ecf8aee510f7cdffbd5e2f48d8157b85e4c))
+* remove signing key ([6aeb140](https://github.com/sqzass/lustx-patches/commit/6aeb1403c4581e6a594d8ea6ab2d2710215b89ed))
+* remove website mention ([06367a3](https://github.com/sqzass/lustx-patches/commit/06367a33f41e319c85634571758884a09828533b))
+
 ## [1.10.0](https://github.com/sqzass/lustx-patches/compare/v1.9.0...v1.10.0) (2026-11-14)
 
 ### ✨ New Features
