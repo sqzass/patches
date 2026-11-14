@@ -27,14 +27,19 @@ private fun Instruction.typefaceStaticRead(): Boolean {
 
 private fun Instruction.isCreateFamily(): Boolean {
     val m = getReference<MethodReference>() ?: return false
-    return m.definingClass == TYPEFACE && m.name == "create" &&
+    return m.definingClass == TYPEFACE &&
+        m.name == "create" &&
         m.parameterTypes.map { it.toString() } == listOf("Ljava/lang/String;", "I") &&
         m.returnType == TYPEFACE
 }
 
 private fun argRegisters(ins: Instruction): List<Int>? = when (ins) {
     is FiveRegisterInstruction -> listOf(
-        ins.registerC, ins.registerD, ins.registerE, ins.registerF, ins.registerG,
+        ins.registerC,
+        ins.registerD,
+        ins.registerE,
+        ins.registerF,
+        ins.registerG,
     ).take(ins.registerCount)
     is RegisterRangeInstruction ->
         (ins.startRegister until ins.startRegister + ins.registerCount).toList()
@@ -46,15 +51,22 @@ private fun forceFamily(method: MutableMethod, invokeIndex: Int, reg: Int, famil
         val ins = method.getInstruction(j)
         val op = ins.opcode
         if ((op == Opcode.CONST_STRING || op == Opcode.CONST_STRING_JUMBO) &&
-            ins is OneRegisterInstruction && ins.registerA == reg
+            ins is OneRegisterInstruction &&
+            ins.registerA == reg
         ) {
             method.replaceInstruction(j, "const-string v$reg, \"$family\"")
             return
         }
-        if (op == Opcode.GOTO || op == Opcode.GOTO_16 || op == Opcode.GOTO_32 ||
-            op == Opcode.PACKED_SWITCH || op == Opcode.SPARSE_SWITCH ||
-            op.name.startsWith("if-") || op.name.startsWith("return")
-        ) return
+        if (op == Opcode.GOTO ||
+            op == Opcode.GOTO_16 ||
+            op == Opcode.GOTO_32 ||
+            op == Opcode.PACKED_SWITCH ||
+            op == Opcode.SPARSE_SWITCH ||
+            op.name.startsWith("if-") ||
+            op.name.startsWith("return")
+        ) {
+            return
+        }
         if (ins is OneRegisterInstruction && ins.registerA == reg) return
     }
 }

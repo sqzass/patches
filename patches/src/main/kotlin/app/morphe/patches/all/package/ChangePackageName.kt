@@ -23,12 +23,14 @@ val changePackageNamePatch = resourcePatch(
     ) { it == "Default" || (it != null && it.matches(Regex("^[a-z]\\w*(\\.[a-z]\\w*)+$"))) }
 
     val updatePermissions by booleanOption(
-        key = "updatePermissions", default = true,
+        key = "updatePermissions",
+        default = true,
         title = "Update permissions",
         description = "Rename custom permissions (incl. the dynamic-receiver permission) that use the old package.",
     )
     val updateProviders by booleanOption(
-        key = "updateProviders", default = true,
+        key = "updateProviders",
+        default = true,
         title = "Update provider authorities",
         description = "Rename content-provider authorities that use the old package.",
     )
@@ -43,8 +45,11 @@ val changePackageNamePatch = resourcePatch(
             val manifest = elementsByTag("manifest").first()
             val oldPackage = manifest.getAttribute("package")
             val newPackage =
-                if (packageNameOption.value == "Default") "$oldPackage.lustx"
-                else packageNameOption.value!!
+                if (packageNameOption.value == "Default") {
+                    "$oldPackage.lustx"
+                } else {
+                    packageNameOption.value!!
+                }
 
             if (updatePermissions == true) {
                 (elementsByTag("permission") + elementsByTag("uses-permission")).forEach { el ->

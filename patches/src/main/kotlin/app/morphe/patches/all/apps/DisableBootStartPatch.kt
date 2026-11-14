@@ -13,7 +13,10 @@ private fun elementsByTag(doc: Document, tag: String): List<Element> {
 private fun childElements(parent: Element, tag: String): List<Element> {
     val out = mutableListOf<Element>()
     var n = parent.firstChild
-    while (n != null) { if (n is Element && n.tagName == tag) out.add(n); n = n.nextSibling }
+    while (n != null) {
+        if (n is Element && n.tagName == tag) out.add(n)
+        n = n.nextSibling
+    }
     return out
 }
 
@@ -25,7 +28,8 @@ val disableBootStartPatch = resourcePatch(
     default = false,
 ) {
     val blockPackageReplaced by booleanOption(
-        key = "blockPackageReplaced", default = false,
+        key = "blockPackageReplaced",
+        default = false,
         title = "Also block update start-up",
         description = "Also remove MY_PACKAGE_REPLACED (auto-start after the app is updated).",
     )

@@ -17,7 +17,8 @@ val spoofInstallSourcePatch = bytecodePatch(
     default = false,
 ) {
     val installerOption = stringOption(
-        key = "installer", default = "com.android.vending",
+        key = "installer",
+        default = "com.android.vending",
         values = mapOf(
             "Google Play Store" to "com.android.vending",
             "Aurora Store" to "com.aurora.store",
@@ -28,7 +29,9 @@ val spoofInstallSourcePatch = bytecodePatch(
             "Xiaomi GetApps" to "com.xiaomi.market",
             "ADB / sideload" to "com.android.shell",
         ),
-        title = "Install source", description = "The installer package to report.", required = true,
+        title = "Install source",
+        description = "The installer package to report.",
+        required = true,
     )
 
     execute {

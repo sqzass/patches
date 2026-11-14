@@ -19,8 +19,11 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private fun Instruction.isLogOrTrace(): Boolean {
     val m = getReference<MethodReference>() ?: return false
-    return (m.definingClass == "Landroid/util/Log;" && m.returnType == "I" &&
-        m.name in setOf("d", "v", "i", "w", "e", "wtf", "println")) ||
+    return (
+        m.definingClass == "Landroid/util/Log;" &&
+            m.returnType == "I" &&
+            m.name in setOf("d", "v", "i", "w", "e", "wtf", "println")
+        ) ||
         (m.definingClass == "Ljava/lang/Throwable;" && m.name == "printStackTrace" && m.returnType == "V")
 }
 
@@ -31,12 +34,14 @@ val universalCleanupPatch = patch(
     default = false,
 ) {
     val stripLogging by booleanOption(
-        key = "stripLogging", default = true,
+        key = "stripLogging",
+        default = true,
         title = "Strip debug logging",
         description = "Remove android.util.Log and Throwable.printStackTrace calls.",
     )
     val stripKotlinMetadata by booleanOption(
-        key = "stripKotlinMetadata", default = true,
+        key = "stripKotlinMetadata",
+        default = true,
         title = "Remove Kotlin module metadata",
         description = "Delete META-INF/*.kotlin_module (safe unless the app uses kotlin-reflect).",
     )

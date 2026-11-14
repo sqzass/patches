@@ -28,17 +28,20 @@ val unlockPremiumPatch = bytecodePatch(
             targets = listOf(
                 AppTarget(version = "1.15.1", versionCode = 104, minSdk = 26),
             ),
-        )
+        ),
     )
 
     execute {
         // 1. Patch Subscribe$State.getState() to always return SUBSCRIBED.
         //    This is the central dispatch for premium state — every premium gate
         //    (VPN servers, upsell badges, paywall) reads this value.
-        SubscribeStateGetStateFingerprint.matchSingle().method.addInstructions(0, """
+        SubscribeStateGetStateFingerprint.matchSingle().method.addInstructions(
+            0,
+            """
             sget-object p0, Lcom/pawxy/browser/core/revenue/Subscribe${'$'}State;->SUBSCRIBED:Lcom/pawxy/browser/core/revenue/Subscribe${'$'}State;
             return-object p0
-        """.trimIndent())
+            """.trimIndent(),
+        )
 
         // 2. Make the SheetUpgrade subscribe button click a no-op so the billing
         //    flow is never opened when the user taps "Subscribe" on the paywall.

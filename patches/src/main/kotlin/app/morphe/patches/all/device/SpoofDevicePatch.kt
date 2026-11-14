@@ -3,8 +3,8 @@ package app.morphe.patches.all.spoof.device
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.booleanOption
+import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getReference
@@ -15,10 +15,21 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private class Preset(
-    val label: String, val manufacturer: String, val brand: String, val model: String,
-    val device: String, val product: String, val board: String, val hardware: String,
-    val release: String, val sdk: Int, val patch: String, val id: String,
-    val incremental: String, val bootloader: String, val radio: String,
+    val label: String,
+    val manufacturer: String,
+    val brand: String,
+    val model: String,
+    val device: String,
+    val product: String,
+    val board: String,
+    val hardware: String,
+    val release: String,
+    val sdk: Int,
+    val patch: String,
+    val id: String,
+    val incremental: String,
+    val bootloader: String,
+    val radio: String,
 ) {
     val fingerprint get() = "$brand/$product/$device:$release/$id/$incremental:user/release-keys"
     val display get() = id
@@ -69,12 +80,16 @@ val spoofDevicePatch = bytecodePatch(
     default = false,
 ) {
     val deviceOption = stringOption(
-        key = "device", default = PRESETS[0].label,
+        key = "device",
+        default = PRESETS[0].label,
         values = PRESETS.associate { it.label to it.label },
-        title = "Device preset", description = "The device to impersonate.", required = true,
+        title = "Device preset",
+        description = "The device to impersonate.",
+        required = true,
     )
     val spoofVersion by booleanOption(
-        key = "spoofVersion", default = false,
+        key = "spoofVersion",
+        default = false,
         title = "Also spoof OS version",
         description = "Also spoof Build.VERSION (RELEASE, SDK_INT, ...). Can break apps; off by default.",
     )
@@ -89,8 +104,10 @@ val spoofDevicePatch = bytecodePatch(
             "TAGS" to "release-keys", "TYPE" to "user", "USER" to "android-build", "HOST" to "abfarm",
         )
         val versionStrings = mapOf(
-            "RELEASE" to p.release, "SECURITY_PATCH" to p.patch,
-            "INCREMENTAL" to p.incremental, "CODENAME" to "REL",
+            "RELEASE" to p.release,
+            "SECURITY_PATCH" to p.patch,
+            "INCREMENTAL" to p.incremental,
+            "CODENAME" to "REL",
         )
         val ver = spoofVersion == true
 

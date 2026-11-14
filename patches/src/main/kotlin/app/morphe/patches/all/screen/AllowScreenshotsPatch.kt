@@ -27,7 +27,11 @@ private fun Instruction.isWindowFlagCall(): Boolean {
 /** Argument registers of an invoke, in order (receiver first). */
 private fun argRegisters(ins: Instruction): List<Int>? = when (ins) {
     is FiveRegisterInstruction -> listOf(
-        ins.registerC, ins.registerD, ins.registerE, ins.registerF, ins.registerG,
+        ins.registerC,
+        ins.registerD,
+        ins.registerE,
+        ins.registerF,
+        ins.registerG,
     ).take(ins.registerCount)
     is RegisterRangeInstruction ->
         (ins.startRegister until ins.startRegister + ins.registerCount).toList()
@@ -52,10 +56,16 @@ private fun clearSecureBit(method: MutableMethod, invokeIndex: Int, reg: Int) {
             return
         }
 
-        if (op == Opcode.GOTO || op == Opcode.GOTO_16 || op == Opcode.GOTO_32 ||
-            op == Opcode.PACKED_SWITCH || op == Opcode.SPARSE_SWITCH ||
-            op.name.startsWith("if-") || op.name.startsWith("return")
-        ) return
+        if (op == Opcode.GOTO ||
+            op == Opcode.GOTO_16 ||
+            op == Opcode.GOTO_32 ||
+            op == Opcode.PACKED_SWITCH ||
+            op == Opcode.SPARSE_SWITCH ||
+            op.name.startsWith("if-") ||
+            op.name.startsWith("return")
+        ) {
+            return
+        }
 
         // Some other instruction redefined this register; give up safely.
         if (ins is OneRegisterInstruction && ins.registerA == reg) return

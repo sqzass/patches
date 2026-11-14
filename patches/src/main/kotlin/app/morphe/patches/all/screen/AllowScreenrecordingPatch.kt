@@ -1,6 +1,5 @@
 package app.morphe.patches.all.screenrecording
 
-import app.morphe.patches.all.screenshot.allowScreenshotsPatch
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
@@ -8,6 +7,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patches.all.screenshot.allowScreenshotsPatch
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
@@ -23,7 +23,11 @@ private fun Instruction.isSetSecureCall(): Boolean {
 
 private fun argRegisters(ins: Instruction): List<Int>? = when (ins) {
     is FiveRegisterInstruction -> listOf(
-        ins.registerC, ins.registerD, ins.registerE, ins.registerF, ins.registerG,
+        ins.registerC,
+        ins.registerD,
+        ins.registerE,
+        ins.registerF,
+        ins.registerG,
     ).take(ins.registerCount)
     is RegisterRangeInstruction ->
         (ins.startRegister until ins.startRegister + ins.registerCount).toList()
@@ -39,10 +43,16 @@ private fun forceFalse(method: MutableMethod, invokeIndex: Int, reg: Int) {
             if (ins.narrowLiteral != 0) method.replaceInstruction(j, "const/4 v$reg, 0x0")
             return
         }
-        if (op == Opcode.GOTO || op == Opcode.GOTO_16 || op == Opcode.GOTO_32 ||
-            op == Opcode.PACKED_SWITCH || op == Opcode.SPARSE_SWITCH ||
-            op.name.startsWith("if-") || op.name.startsWith("return")
-        ) return
+        if (op == Opcode.GOTO ||
+            op == Opcode.GOTO_16 ||
+            op == Opcode.GOTO_32 ||
+            op == Opcode.PACKED_SWITCH ||
+            op == Opcode.SPARSE_SWITCH ||
+            op.name.startsWith("if-") ||
+            op.name.startsWith("return")
+        ) {
+            return
+        }
         if (ins is OneRegisterInstruction && ins.registerA == reg) return
     }
 }
