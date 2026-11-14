@@ -1,3 +1,15 @@
+## [1.13.0](https://github.com/sqzass/lustx-patches/compare/v1.12.0...v1.13.0) (2026-11-14)
+
+### ✨ New Features
+
+* add cleanup junk from all apps patch ([620525c](https://github.com/sqzass/lustx-patches/commit/620525ca1c15b8445df9203cf746622345747789))
+* add disable boot start permission patch ([ed11c0b](https://github.com/sqzass/lustx-patches/commit/ed11c0bb79e5a8b52425b6f8d848729321627e58))
+* add hide app icon from drawer/launcher patch ([ede7413](https://github.com/sqzass/lustx-patches/commit/ede74139c017a79083edbc104329914095d50c6d))
+* add remove sensitive permission patches ([4725a4e](https://github.com/sqzass/lustx-patches/commit/4725a4edd6cf58d7446a2e78f6915dbe039c8922))
+* add remove vpn checks patch ([a53d2e8](https://github.com/sqzass/lustx-patches/commit/a53d2e861d09fce7c887b38f1d4e069b0d23f9a6))
+* add spoof device patch with presets ([5f67e93](https://github.com/sqzass/lustx-patches/commit/5f67e937bc6405fc7085f6df187bf1da2bc753cd))
+* add spoof install source patch ([f687f4d](https://github.com/sqzass/lustx-patches/commit/f687f4d7c176e22eae672800918046c24f6b97c6))
+
 ## [1.12.0](https://github.com/sqzass/lustx-patches/compare/v1.11.0...v1.12.0) (2026-11-14)
 
 ### ✨ New Features
