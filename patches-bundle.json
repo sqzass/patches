@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-14T02:57:15",
-  "description": "## [1.10.1](https://github.com/sqzass/lustx-patches/compare/v1.10.0...v1.10.1) (2026-11-14)\n\n### 🐛 Bug Fixes\n\n* ci ([575b8ec](https://github.com/sqzass/lustx-patches/commit/575b8ecf8aee510f7cdffbd5e2f48d8157b85e4c))\n* remove signing key ([6aeb140](https://github.com/sqzass/lustx-patches/commit/6aeb1403c4581e6a594d8ea6ab2d2710215b89ed))\n* remove website mention ([06367a3](https://github.com/sqzass/lustx-patches/commit/06367a33f41e319c85634571758884a09828533b))",
-  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.10.1/patches-1.10.1.mpp",
+  "created_at": "2026-11-14T03:04:19",
+  "description": "## [1.10.2](https://github.com/sqzass/lustx-patches/compare/v1.10.1...v1.10.2) (2026-11-14)\n\n### 🐛 Bug Fixes\n\n* changed logo for lustx ([3908212](https://github.com/sqzass/lustx-patches/commit/39082120d41d7abede9a842b0b0200f2b3ce5edb))\n* removed duped node.js setup in release - harmless but still ([fb5428f](https://github.com/sqzass/lustx-patches/commit/fb5428f7f0aa66a6fa10ff9cedb783a3b9f11828))",
+  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.10.2/patches-1.10.2.mpp",
   "signature_download_url": "",
-  "version": "1.10.1"
+  "version": "1.10.2"
 }

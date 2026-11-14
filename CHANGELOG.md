@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/sqzass/lustx-patches/compare/v1.10.1...v1.10.2) (2026-11-14)
+
+### 🐛 Bug Fixes
+
+* changed logo for lustx ([3908212](https://github.com/sqzass/lustx-patches/commit/39082120d41d7abede9a842b0b0200f2b3ce5edb))
+* removed duped node.js setup in release - harmless but still ([fb5428f](https://github.com/sqzass/lustx-patches/commit/fb5428f7f0aa66a6fa10ff9cedb783a3b9f11828))
+
 ## [1.10.1](https://github.com/sqzass/lustx-patches/compare/v1.10.0...v1.10.1) (2026-11-14)
 
 ### 🐛 Bug Fixes
