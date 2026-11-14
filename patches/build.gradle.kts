@@ -1,5 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+plugins {
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+}
+
 group = "app.sqzass"
 
 patches {
@@ -8,7 +12,7 @@ patches {
         description = "Lustx Patches, by sqzass"
         source = "git@github.com:sqzass/lustx-patches.git"
         author = "sqzass"
-        contact = "333@qrypty.com"
+        contact = "na"
         website = "https://github.com/sqzass/lustx-patches"
         license = "GNU General Public License v3.0, with additional GPL section 7 requirements"
     }

@@ -52,4 +52,3 @@ internal object VpnPremiumUpsellFingerprint : Fingerprint(
     returnType = "V",
     filters = listOf(string("wad_tag")),
 )
-

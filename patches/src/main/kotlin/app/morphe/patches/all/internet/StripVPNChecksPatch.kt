@@ -27,11 +27,19 @@ private fun argRegisters(ins: Instruction): List<Int>? = when (ins) {
 
 private fun constValue(method: MutableMethod, invokeIndex: Int, reg: Int): Int? {
     for (j in invokeIndex - 1 downTo 0) {
-        val ins = method.getInstruction(j); val op = ins.opcode
+        val ins = method.getInstruction(j)
+        val op = ins.opcode
         if (ins is NarrowLiteralInstruction && ins is OneRegisterInstruction && ins.registerA == reg) return ins.narrowLiteral
-        if (op == Opcode.GOTO || op == Opcode.GOTO_16 || op == Opcode.GOTO_32 ||
-            op == Opcode.PACKED_SWITCH || op == Opcode.SPARSE_SWITCH ||
-            op.name.startsWith("if-") || op.name.startsWith("return")) return null
+        if (op == Opcode.GOTO ||
+            op == Opcode.GOTO_16 ||
+            op == Opcode.GOTO_32 ||
+            op == Opcode.PACKED_SWITCH ||
+            op == Opcode.SPARSE_SWITCH ||
+            op.name.startsWith("if-") ||
+            op.name.startsWith("return")
+        ) {
+            return null
+        }
         if (ins is OneRegisterInstruction && ins.registerA == reg) return null
     }
     return null
@@ -66,7 +74,8 @@ val stripVpnChecksPatch = bytecodePatch(
     default = false,
 ) {
     val stripInterfaceChecks by booleanOption(
-        key = "stripInterfaceChecks", default = true,
+        key = "stripInterfaceChecks",
+        default = true,
         title = "Also strip interface-name checks",
         description = "Defeat tun/ppp/tap interface-name comparisons in NetworkInterface-using methods.",
     )
