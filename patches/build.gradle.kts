@@ -8,7 +8,7 @@ patches {
         description = "Lustx Patches, by sqzass"
         source = "git@github.com:sqzass/lustx-patches.git"
         author = "sqzass"
-        contact = "na"
+        contact = "333@qrypty.com"
         website = "https://github.com/sqzass/lustx-patches"
         license = "GNU General Public License v3.0, with additional GPL section 7 requirements"
     }
