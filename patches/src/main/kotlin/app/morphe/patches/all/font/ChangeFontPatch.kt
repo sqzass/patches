@@ -28,7 +28,7 @@ private fun Instruction.typefaceStaticRead(): Boolean {
 private fun Instruction.isCreateFamily(): Boolean {
     val m = getReference<MethodReference>() ?: return false
     return m.definingClass == TYPEFACE && m.name == "create" &&
-        m.parameters.map { it.toString() } == listOf("Ljava/lang/String;", "I") &&
+        m.parameterTypes.map { it.toString() } == listOf("Ljava/lang/String;", "I") &&
         m.returnType == TYPEFACE
 }
 
