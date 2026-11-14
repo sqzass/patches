@@ -36,8 +36,15 @@ jobs:
       - name: Cache Gradle
         uses: burrunan/gradle-cache-action@v3
 
-      - name: Install dependencies
-        run: npm install
+      # Fast-fail on style/compile before touching Node. ktlintCheck is also
+      # re-run inside publish -> build -> check below; this just gives a clean,
+      # isolated failure signal. No --no-daemon: the repo pins
+      # org.gradle.jvmargs=-Xms512M -Xmx2048M, which doesn't match the runner's
+      # client JVM, so --no-daemon would fork a single-use disposable daemon
+      # anyway (per the Gradle daemon docs). Letting it reuse one daemon across
+      # Lint + Release is faster and is what Gradle recommends for CI.
+      - name: Lint
+        run: ./gradlew :patches:ktlintCheck
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -48,14 +55,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: ./gradlew :patches:ktlintCheck --no-daemon
-        
       - name: Release
-        run: npx semantic-release
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MORPHE_SIGNING_KEY: ${{ secrets.MORPHE_SIGNING_KEY }}
+        run: |
+          before=$(git tag --points-at HEAD)
+          npx semantic-release
+          after=$(git tag --points-at HEAD)
+          new_tag=$(comm -13 <(printf '%s\n' "$before" | sort) <(printf '%s\n' "$after" | sort) | head -n1)
+          if [ -n "$new_tag" ]; then
+            version=$(python3 -c "import json;print(json.load(open('patches-list.json'))['version'])")
+            {
+              echo "new_release_published=true"
+              echo "new_release_git_tag=$new_tag"
+              echo "new_release_version=$version"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "new_release_published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build patch bundle
+        if: steps.release.outputs.new_release_published == 'true'
+        run: ./gradlew :patches:buildAndroid
 
       - name: Attest
         if: steps.release.outputs.new_release_published == 'true'
