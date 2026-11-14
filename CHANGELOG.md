@@ -1,3 +1,11 @@
+## [1.11.0](https://github.com/sqzass/lustx-patches/compare/v1.10.2...v1.11.0) (2026-11-14)
+
+### ✨ New Features
+
+* add allow screenrecording patch ([c2eab05](https://github.com/sqzass/lustx-patches/commit/c2eab051495be0b52b39fc0dfeafd694c8ad04ae))
+* add allow screenshots patch ([255f066](https://github.com/sqzass/lustx-patches/commit/255f0668a1ad499cbed7ea0da11312efd3b00560))
+* add remove pairip patch ([61e9f46](https://github.com/sqzass/lustx-patches/commit/61e9f462dbc1b9d0b9bf359ddccd1e6fc75cca2e))
+
 ## [1.10.2](https://github.com/sqzass/lustx-patches/compare/v1.10.1...v1.10.2) (2026-11-14)
 
 ### 🐛 Bug Fixes

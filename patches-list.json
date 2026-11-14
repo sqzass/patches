@@ -1,7 +1,31 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "patches": [
+    {
+      "name": "Allow screen recording",
+      "description": "Clears FLAG_SECURE and disables secure surfaces so the app can be screen-recorded.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": []
+    },
+    {
+      "name": "Allow screenshots",
+      "description": "Clears FLAG_SECURE from window flags so the app can be captured in screenshots.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": []
+    },
+    {
+      "name": "Remove PairIP",
+      "description": "Removes the PairIP Play licensing gate (startup license check, response validation, repeated checks and paywall/kill path). Does not bypass PairIP native virtualization or Play Integrity attestation.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": null,
+      "options": []
+    },
     {
       "name": "Unlock premium",
       "description": "Unlocks Pawxy premium features (VPN servers, removes paywall and upsell badges).",
