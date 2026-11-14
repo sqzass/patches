@@ -1,3 +1,9 @@
+## [1.14.0](https://github.com/sqzass/lustx-patches/compare/v1.13.1...v1.14.0) (2026-11-14)
+
+### ✨ New Features
+
+* add contact to build.gradle.kts ([8dbb0ca](https://github.com/sqzass/lustx-patches/commit/8dbb0caa0cbd8c4a8efd592478b06e8b8e5d5559))
+
 ## [1.13.1](https://github.com/sqzass/lustx-patches/compare/v1.13.0...v1.13.1) (2026-11-14)
 
 ### 🐛 Bug Fixes

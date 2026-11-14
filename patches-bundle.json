@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-14T03:34:05",
-  "description": "## [1.13.1](https://github.com/sqzass/lustx-patches/compare/v1.13.0...v1.13.1) (2026-11-14)\n\n### 🐛 Bug Fixes\n\n* change font patch to use proper var ([922594a](https://github.com/sqzass/lustx-patches/commit/922594a27b56b31aa853d797f2da2d652fc22768))\n* invisible \\r failures (crlf line endings) ([506678b](https://github.com/sqzass/lustx-patches/commit/506678b078df5d90df4012eac577f2dc84ef0458))",
-  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.13.1/patches-1.13.1.mpp",
+  "created_at": "2026-11-14T04:27:28",
+  "description": "## [1.14.0](https://github.com/sqzass/lustx-patches/compare/v1.13.1...v1.14.0) (2026-11-14)\n\n### ✨ New Features\n\n* add contact to build.gradle.kts ([8dbb0ca](https://github.com/sqzass/lustx-patches/commit/8dbb0caa0cbd8c4a8efd592478b06e8b8e5d5559))",
+  "download_url": "https://github.com/sqzass/lustx-patches/releases/download/v1.14.0/patches-1.14.0.mpp",
   "signature_download_url": "",
-  "version": "1.13.1"
+  "version": "1.14.0"
 }
